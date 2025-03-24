@@ -71,12 +71,9 @@ class MainView(StackLayout):
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
   def update_clock(self,interval):
-    timenow=datetime.datetime.now()
-    self.ids.time.text=timenow.strftime("%H : %M : %S")
-    if self.blindsrunning:
-      self.update_countdown()
+    if not self.blindsrunning:
+      return
 
-  def update_countdown(self):
     self.ids.timeuntilnextblinds.text=format_time(self.time)
     self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.blindsinterval))*self.ids.timeuntilnextblinds.width
     self.time-=1
