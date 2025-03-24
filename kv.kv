@@ -11,10 +11,17 @@
     font_size: dp(32)
     size_hint: (1.0,dp(120)/app.height)
 
+<InfoFieldSmall@Label>:
+    size_hint: (1.0,dp(120)/app.height)
+
+<Controls@Button>:
+    size_hint: (0.25,dp(240)/app.height)
+
 <MainView>:
     orientation: "tb-lr"
     StackLayout:
         orientation: "tb-lr"
+        size_hint: (1.0,0.9)
         TextField:
             text: "Time"
         InfoField:
@@ -32,6 +39,17 @@
             text: "-- : --"
         TextField:
             text: "Next blinds"
-        InfoField:
+        InfoFieldSmall:
             id: nextblinds
             text: "-- / --"
+    StackLayout:
+        size_hint: (1.0,0.1)
+        orientation: "lr-tb"
+        Controls:
+            text: "start"
+        Controls:
+            text: "prev"
+        Controls:
+            text: "next"
+        Controls:
+            text: "reset"

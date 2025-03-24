@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import datetime
 import random
 
 from kivy.clock import Clock
@@ -20,7 +21,7 @@ from kivy.app import App
 from threading import Thread
 
 Builder.load_file("kv.kv")
-Config.set('kivy', 'exit_on_escape', '0')
+#Config.set('kivy', 'exit_on_escape', '0')
 
 # set up platform-specific things
 
@@ -35,13 +36,24 @@ else:
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
+# set up blinds, display initial values
     self.smallblinds=[ 25,50,100,150,200,300,400,500,600,800,1000,1500,2000,3000,4000,5000 ]
+    self.ids.currentblinds.text=("%d / %d"%(self.smallblinds[0],self.smallblinds[0]*2))
+    self.ids.nextblinds.text=("%d / %d"%(self.smallblinds[1],self.smallblinds[1]*2))
 
-class DecisionMaker(App):
+# get time, set initial display
+    timenow=datetime.datetime.now()
+    self.ids.time.text=timenow.strftime("%H:%M:%S")
+    self.ids.timeuntilnextblinds.text="15:00"
+
+# set up timer
+    self.time=0
+
+class BlindsTimer(App):
   def build(self):
     self.width = Window.width
     self.height = Window.height
     return MainView()
 
 if __name__ == '__main__':
-    DecisionMaker().run()
+    BlindsTimer().run()
