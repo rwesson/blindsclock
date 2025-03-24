@@ -34,8 +34,10 @@ if platform=="android":
 else:
   Window.size=(400,780)
 
-def format_time(s):
-  return "%02d:%02d"%(math.floor(s/60),s%60)
+def format_time(s,h=False):
+  if h:
+    return "%02d : %02d : %02d"%(math.floor(s/3600),math.floor(s%3600/60),s%60)
+  return "%02d : %02d"%(math.floor(s/60),s%60)
 
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
@@ -48,6 +50,7 @@ class MainView(StackLayout):
     self.blindlevel=0
     self.blindsrunning=False
     self.blindsinterval=900
+    self.gametime=0
     self.time=self.blindsinterval
 
 # get time, set initial display
@@ -69,7 +72,7 @@ class MainView(StackLayout):
 
   def update_clock(self,interval):
     timenow=datetime.datetime.now()
-    self.ids.time.text=timenow.strftime("%H:%M:%S")
+    self.ids.time.text=timenow.strftime("%H : %M : %S")
     if self.blindsrunning:
       self.update_countdown()
 
@@ -77,6 +80,8 @@ class MainView(StackLayout):
     self.ids.timeuntilnextblinds.text=format_time(self.time)
     self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.blindsinterval))*self.ids.timeuntilnextblinds.width
     self.time-=1
+    self.ids.gametime.text=format_time(self.gametime,True)
+    self.gametime+=1
 
 # handle timer getting to zero
     if self.time<0:
