@@ -1,0 +1,37 @@
+<TextField@Label>:
+    size_hint: (1.0,dp(60)/app.height)
+    canvas:
+        Color:
+            rgba: (0,1,1,0.2)
+        Rectangle:
+            pos: self.pos
+            size: (self.width,self.height)
+
+<InfoField@Label>:
+    font_size: dp(32)
+    size_hint: (1.0,dp(120)/app.height)
+
+<MainView>:
+    orientation: "tb-lr"
+    StackLayout:
+        orientation: "tb-lr"
+        TextField:
+            text: "Time"
+        InfoField:
+            id: time
+            text: "-- : -- : --"
+        TextField:
+            text: "Current blinds"
+        InfoField:
+            id: currentblinds
+            text: "-- / --"
+        TextField:
+            text: "Blinds go up in"
+        InfoField:
+            id: timeuntilnextblinds
+            text: "-- : --"
+        TextField:
+            text: "Next blinds"
+        InfoField:
+            id: nextblinds
+            text: "-- / --"
