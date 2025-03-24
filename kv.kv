@@ -8,10 +8,6 @@
             size: (self.width,self.height)
 
 <InfoField@Label>:
-    font_size: dp(32)
-    size_hint: (1.0,dp(120)/app.height)
-
-<InfoFieldSmall@Label>:
     size_hint: (1.0,dp(120)/app.height)
 
 <Controls@Button>:
@@ -26,16 +22,20 @@
             text: "Time"
         InfoField:
             id: time
+            font_size: dp(32)
             text: "-- : -- : --"
         TextField:
             text: "Current blinds"
         InfoField:
             id: currentblinds
+            font_size: dp(64)
+            color: "#aaeeff"
             text: "-- / --"
         TextField:
             text: "Blinds go up in"
         InfoField:
             id: timeuntilnextblinds
+            font_size: dp(32)
             bgwidth: 0
             text: "-- : --"
             canvas:
@@ -46,7 +46,7 @@
                     size: (self.bgwidth,self.height)
         TextField:
             text: "Next blinds"
-        InfoFieldSmall:
+        InfoField:
             id: nextblinds
             text: "-- / --"
     StackLayout:
