@@ -74,9 +74,14 @@ class MainView(StackLayout):
     if not self.blindsrunning:
       return
 
-    self.ids.timeuntilnextblinds.text=format_time(self.time)
-    self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.blindsinterval))*self.ids.timeuntilnextblinds.width
-    self.time-=1
+    if self.blindlevel+1<len(self.smallblinds):
+      self.ids.timeuntilnextblinds.text=format_time(self.time)
+      self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.blindsinterval))*self.ids.timeuntilnextblinds.width
+      self.time-=1
+    else:
+      self.ids.timeuntilnextblinds.text="-- : --"
+      self.ids.timeuntilnextblinds.bgwidth=0
+
     self.ids.gametime.text=format_time(self.gametime,True)
     self.gametime+=1
 
