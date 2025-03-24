@@ -34,14 +34,14 @@ if platform=="android":
 else:
   Window.size=(400,780)
 
+def format_time(s):
+  return "%02d:%02d"%(math.floor(s/60),s%60)
+
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 # set up blinds, display initial values
     self.smallblinds=[ 25,50,100,150,200,300,400,500,600,800,1000,1500,2000,3000,4000,5000 ]
-
-# get time, set initial display
-    self.ids.timeuntilnextblinds.text="15:00"
 
 # set up trackers
 
@@ -49,6 +49,9 @@ class MainView(StackLayout):
     self.blindsrunning=False
     self.blindsinterval=900
     self.time=self.blindsinterval
+
+# get time, set initial display
+    self.ids.timeuntilnextblinds.text=format_time(self.blindsinterval)
 
 # display blinds
     self.display_blinds()
@@ -71,7 +74,7 @@ class MainView(StackLayout):
       self.update_countdown()
 
   def update_countdown(self):
-    self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
+    self.ids.timeuntilnextblinds.text=format_time(self.time)
     self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.blindsinterval))*self.ids.timeuntilnextblinds.width
     self.time-=1
 
@@ -100,7 +103,7 @@ class MainView(StackLayout):
       self.blindsrunning=False
 
     self.time=self.blindsinterval
-    self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
+    self.ids.timeuntilnextblinds.text=format_time(self.time)
     self.display_blinds()
 
 class BlindsTimer(App):
