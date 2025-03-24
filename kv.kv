@@ -8,10 +8,10 @@
             size: (self.width,self.height)
 
 <InfoField@Label>:
-    size_hint: (1.0,dp(120)/app.height)
+    size_hint: (1.0,dp(80)/app.height)
 
 <Controls@Button>:
-    size_hint: (0.25,dp(240)/app.height)
+    size_hint: (0.25,1)
 
 <MainView>:
     orientation: "tb-lr"
@@ -19,18 +19,22 @@
         orientation: "tb-lr"
         size_hint: (1.0,0.9)
         TextField:
-            text: "Current blinds"
+            text: "Game time"
         InfoField:
+            id: gametime
+            font_size: dp(32)
+            text: "00 : 00 : 00"
+        TextField:
+            text: "Current blinds"
+        Label:
             id: currentblinds
             font_size: dp(64)
+            size_hint: (1.0,dp(440)/app.height)
             color: "#aaeeff"
             text: "-- : --"
-        Label:
+        TextField:
             id: nextblinds
             text: "-- : --"
-            size_hint: (1.0,dp(40)/app.height)
-        TextField:
-            text: "Blinds go up in"
         InfoField:
             id: timeuntilnextblinds
             font_size: dp(32)
@@ -42,12 +46,6 @@
                 Rectangle:
                     pos: self.pos
                     size: (self.bgwidth,self.height)
-        TextField:
-            text: "Game time"
-        InfoField:
-            id: gametime
-            font_size: dp(32)
-            text: "00 : 00 : 00"
     StackLayout:
         size_hint: (1.0,0.1)
         orientation: "lr-tb"
