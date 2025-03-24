@@ -66,7 +66,7 @@ class MainView(StackLayout):
     self.ids.currentblinds.text=("%d / %d"%(self.smallblinds[self.blindlevel],self.smallblinds[self.blindlevel]*2))
     self.blindlevel=min(self.blindlevel,len(self.smallblinds)-1)
     if self.blindlevel+1<len(self.smallblinds):
-      self.ids.nextblinds.text=("%d / %d"%(self.smallblinds[self.blindlevel+1],self.smallblinds[self.blindlevel+1]*2))
+      self.ids.nextblinds.text=("next blinds: %d / %d"%(self.smallblinds[self.blindlevel+1],self.smallblinds[self.blindlevel+1]*2))
     else:
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
