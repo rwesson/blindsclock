@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import datetime
+import math
 import random
 
 from kivy.clock import Clock
@@ -38,16 +39,41 @@ class MainView(StackLayout):
     super().__init__(**kwargs)
 # set up blinds, display initial values
     self.smallblinds=[ 25,50,100,150,200,300,400,500,600,800,1000,1500,2000,3000,4000,5000 ]
-    self.ids.currentblinds.text=("%d / %d"%(self.smallblinds[0],self.smallblinds[0]*2))
-    self.ids.nextblinds.text=("%d / %d"%(self.smallblinds[1],self.smallblinds[1]*2))
 
 # get time, set initial display
-    timenow=datetime.datetime.now()
-    self.ids.time.text=timenow.strftime("%H:%M:%S")
     self.ids.timeuntilnextblinds.text="15:00"
 
-# set up timer
-    self.time=0
+# set up trackers
+    self.blindlevel=0
+    self.time=900
+
+# display blinds
+    self.display_blinds()
+
+# start clock
+    Clock.schedule_interval(self.update_clock,1)
+
+  def display_blinds(self):
+    self.ids.currentblinds.text=("%d / %d"%(self.smallblinds[self.blindlevel],self.smallblinds[self.blindlevel]*2))
+    self.blindlevel=min(self.blindlevel,len(self.smallblinds)-1)
+    if self.blindlevel+1<len(self.smallblinds):
+      self.ids.nextblinds.text=("%d / %d"%(self.smallblinds[self.blindlevel+1],self.smallblinds[self.blindlevel+1]*2))
+    else:
+      self.ids.nextblinds.text="NO MORE BLIND RAISES"
+
+  def update_clock(self,interval):
+    timenow=datetime.datetime.now()
+    self.ids.time.text=timenow.strftime("%H:%M:%S")
+
+#  def update_countdown(self,interval):
+    self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
+    self.time-=1
+
+# handle timer getting to zero
+    if self.time<0:
+      self.time=900
+      self.blindlevel+=1
+      self.display_blinds()
 
 class BlindsTimer(App):
   def build(self):
