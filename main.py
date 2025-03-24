@@ -86,7 +86,12 @@ class MainView(StackLayout):
       self.display_blinds()
 
   def start_blinds_timer(self):
-    self.blindsrunning=True
+    if self.ids.startstop.text=="start":
+      self.blindsrunning=True
+      self.ids.startstop.text="stop"
+    else:
+      self.blindsrunning=False
+      self.ids.startstop.text="start"
 
   def blinds_control(self,opt):
     if opt=="prev":
