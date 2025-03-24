@@ -19,18 +19,17 @@
         orientation: "tb-lr"
         size_hint: (1.0,0.9)
         TextField:
-            text: "Game time"
-        InfoField:
-            id: gametime
-            font_size: dp(32)
-            text: "00 : 00 : 00"
-        TextField:
             text: "Current blinds"
         InfoField:
             id: currentblinds
             font_size: dp(64)
             color: "#aaeeff"
-            text: "-- / --"
+            text: "-- : --"
+        TextField:
+            text: "Next blinds"
+        InfoField:
+            id: nextblinds
+            text: "-- : --"
         TextField:
             text: "Blinds go up in"
         InfoField:
@@ -45,10 +44,11 @@
                     pos: self.pos
                     size: (self.bgwidth,self.height)
         TextField:
-            text: "Next blinds"
+            text: "Game time"
         InfoField:
-            id: nextblinds
-            text: "-- / --"
+            id: gametime
+            font_size: dp(32)
+            text: "00 : 00 : 00"
     StackLayout:
         size_hint: (1.0,0.1)
         orientation: "lr-tb"
