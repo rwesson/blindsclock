@@ -88,6 +88,17 @@ class MainView(StackLayout):
   def start_blinds_timer(self):
     self.blindsrunning=True
 
+  def blinds_control(self,opt):
+    if opt=="prev":
+      self.blindlevel=max(0,self.blindlevel-1)
+    elif opt=="next":
+      self.blindlevel=min(len(self.smallblinds)-1,self.blindlevel+1)
+    elif opt=="reset":
+      self.blindlevel=0
+
+    self.time=self.blindsinterval
+    self.display_blinds()
+
 class BlindsTimer(App):
   def build(self):
     self.width = Window.width

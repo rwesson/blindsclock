@@ -57,7 +57,10 @@
             on_release: root.start_blinds_timer()
         Controls:
             text: "prev"
+            on_release: root.blinds_control("prev")
         Controls:
             text: "next"
+            on_release: root.blinds_control("next")
         Controls:
             text: "reset"
+            on_release: root.blinds_control("reset")
