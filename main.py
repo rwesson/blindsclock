@@ -44,7 +44,9 @@ class MainView(StackLayout):
     self.ids.timeuntilnextblinds.text="15:00"
 
 # set up trackers
+
     self.blindlevel=0
+    self.blindsrunning=False
     self.time=900
 
 # display blinds
@@ -64,8 +66,10 @@ class MainView(StackLayout):
   def update_clock(self,interval):
     timenow=datetime.datetime.now()
     self.ids.time.text=timenow.strftime("%H:%M:%S")
+    if self.blindsrunning:
+      self.update_countdown()
 
-#  def update_countdown(self,interval):
+  def update_countdown(self):
     self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
     self.time-=1
 
@@ -74,6 +78,9 @@ class MainView(StackLayout):
       self.time=900
       self.blindlevel+=1
       self.display_blinds()
+
+  def start_blinds_timer(self):
+    self.blindsrunning=True
 
 class BlindsTimer(App):
   def build(self):
