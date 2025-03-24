@@ -102,6 +102,7 @@ class MainView(StackLayout):
       self.blindlevel=0
 
     self.time=self.blindsinterval
+    self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
     self.display_blinds()
 
 class BlindsTimer(App):
