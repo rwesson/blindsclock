@@ -100,6 +100,7 @@ class MainView(StackLayout):
       self.blindlevel=min(len(self.smallblinds)-1,self.blindlevel+1)
     elif opt=="reset":
       self.blindlevel=0
+      self.blindsrunning=False
 
     self.time=self.blindsinterval
     self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
