@@ -60,7 +60,7 @@ class MainView(StackLayout):
     self.display_blinds()
 
 # start clock
-    Clock.schedule_interval(self.update_clock,1)
+    Clock.schedule_interval(self.update_display,1)
 
   def display_blinds(self):
     self.ids.currentblinds.text=("%d / %d"%(self.smallblinds[self.blindlevel],self.smallblinds[self.blindlevel]*2))
@@ -70,7 +70,7 @@ class MainView(StackLayout):
     else:
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
-  def update_clock(self,interval):
+  def update_display(self,interval):
     if not self.blindsrunning:
       return
 
