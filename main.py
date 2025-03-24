@@ -72,11 +72,8 @@ class MainView(StackLayout):
 
   def update_countdown(self):
     self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
+    self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.blindsinterval))*self.ids.timeuntilnextblinds.width
     self.time-=1
-
-# change background if less than one minute until blinds going up
-    if self.time<60:
-      self.ids.timeuntilnextblinds.bgwidth=self.ids.timeuntilnextblinds.width
 
 # handle timer getting to zero
     if self.time<0:
