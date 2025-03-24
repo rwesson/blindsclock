@@ -47,7 +47,8 @@ class MainView(StackLayout):
 
     self.blindlevel=0
     self.blindsrunning=False
-    self.time=900
+    self.blindsinterval=900
+    self.time=self.blindsinterval
 
 # display blinds
     self.display_blinds()
@@ -73,10 +74,15 @@ class MainView(StackLayout):
     self.ids.timeuntilnextblinds.text="%02d:%02d"%(math.floor(self.time/60),self.time%60)
     self.time-=1
 
+# change background if less than one minute until blinds going up
+    if self.time<60:
+      self.ids.timeuntilnextblinds.bgwidth=self.ids.timeuntilnextblinds.width
+
 # handle timer getting to zero
     if self.time<0:
-      self.time=900
+      self.time=self.blindsinterval
       self.blindlevel+=1
+      self.ids.timeuntilnextblinds.bgwidth=0
       self.display_blinds()
 
   def start_blinds_timer(self):

@@ -36,7 +36,14 @@
             text: "Blinds go up in"
         InfoField:
             id: timeuntilnextblinds
+            bgwidth: 0
             text: "-- : --"
+            canvas:
+                Color:
+                    rgba: (1.0,0.4,0,0.5)
+                Rectangle:
+                    pos: self.pos
+                    size: (self.bgwidth,self.height)
         TextField:
             text: "Next blinds"
         InfoFieldSmall:
