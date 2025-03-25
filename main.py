@@ -111,6 +111,9 @@ class MainView(StackLayout):
     elif opt=="reset":
       self.blindlevel=0
       self.blindsrunning=False
+      self.time=0
+      self.ids.timeuntilnextblinds.bgwidth=0
+      self.display_blinds()
 
     self.time=self.blindsinterval
     self.ids.timeuntilnextblinds.text=format_time(self.time)
