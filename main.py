@@ -32,7 +32,7 @@ if platform=="android":
   request_permissions([Permission.READ_EXTERNAL_STORAGE,Permission.WRITE_EXTERNAL_STORAGE])
 
 else:
-  Window.size=(400,780)
+  Window.size=(400,780) # mobile gives 1080,2116
 
 def format_time(s,h=False):
   if h:
