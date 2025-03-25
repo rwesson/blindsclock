@@ -20,7 +20,7 @@
     orientation: "tb-lr"
     StackLayout:
         orientation: "tb-lr"
-        size_hint: (1.0,0.9)
+        size_hint: (1.0,0.94)
         TextField:
             text: "Game time"
         InfoField:
@@ -32,7 +32,7 @@
         Label:
             id: currentblinds
             font_size: dp(64)
-            size_hint: (1.0,dp(440)/app.height)
+            size_hint: (1.0,dp(410)/app.height)
             color: "#aaeeff"
             text: "-- : --"
         TextField:
@@ -50,7 +50,7 @@
                     pos: self.pos
                     size: (self.bgwidth,self.height)
     StackLayout:
-        size_hint: (1.0,0.1)
+        size_hint: (1.0,0.06)
         orientation: "lr-tb"
         Controls:
             id: startstop
