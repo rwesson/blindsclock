@@ -109,11 +109,17 @@ class MainView(StackLayout):
     elif opt=="next":
       self.blindlevel=min(len(self.smallblinds)-1,self.blindlevel+1)
     elif opt=="reset":
+# reset blinds
       self.blindlevel=0
       self.blindsrunning=False
-      self.time=0
       self.ids.timeuntilnextblinds.bgwidth=0
-      self.display_blinds()
+      self.ids.timeuntilnextblinds.color="white"
+# reset game time
+      self.gametime=0
+      self.ids.gametime.text=format_time(self.gametime,True)
+# stop timers if they are running
+      if self.ids.startstop.text=="stop":
+        self.start_blinds_timer()
 
     self.time=self.blindsinterval
     self.ids.timeuntilnextblinds.text=format_time(self.time)
