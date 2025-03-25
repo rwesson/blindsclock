@@ -85,6 +85,9 @@ class MainView(StackLayout):
     self.ids.gametime.text=format_time(self.gametime,True)
     self.gametime+=1
 
+# change text colour if less than 60s remaining
+    self.ids.timeuntilnextblinds.color="red" if self.time<60 else "white"
+
 # handle timer getting to zero
     if self.time<0:
       self.time=self.blindsinterval
