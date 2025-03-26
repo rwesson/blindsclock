@@ -16,6 +16,9 @@
 <Controls@Button>:
     size_hint: (0.25,1)
 
+<ConfirmButton@Button>:
+    size_hint: (0.5,1)
+
 <MainView>:
     orientation: "tb-lr"
     StackLayout:
@@ -64,4 +67,19 @@
             on_release: root.blinds_control("next")
         Controls:
             text: "reset"
-            on_release: root.blinds_control("reset")
+            on_release: root.reset()
+
+<ConfirmReset>:
+    canvas:
+        Color:
+            rgba: (1,1,1,0.5)
+        Line:
+            width: 1
+            rectangle: self.x, self.y, self.width, self.height
+    BoxLayout:
+        ConfirmButton:
+            text: "yeah"
+            on_release: root.confirm("yeah")
+        ConfirmButton:
+            text: "nah"
+            on_release: root.confirm("nah")

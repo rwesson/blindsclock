@@ -9,6 +9,7 @@ from kivy.config import Config
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import sp
+from kivy.properties import BooleanProperty
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
@@ -34,6 +35,20 @@ def format_time(s,h=False):
   if h:
     return "%02d : %02d : %02d"%(math.floor(s/3600),math.floor(s%3600/60),s%60)
   return "%02d : %02d"%(math.floor(s/60),s%60)
+
+class ConfirmReset(Popup):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+    self.title="sure?"
+    self.confirmed=BooleanProperty()
+
+  def confirm(self,msg):
+    if msg=="yeah":
+      self.confirmed=True
+    else:
+      self.confirmed=False
+
+    self.dismiss()
 
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
@@ -104,10 +119,22 @@ class MainView(StackLayout):
       self.blindlevel=max(0,self.blindlevel-1)
     elif opt=="next":
       self.blindlevel=min(len(self.smallblinds)-1,self.blindlevel+1)
-    elif opt=="reset":
+
+    self.time=self.blindsinterval
+    self.ids.timeuntilnextblinds.text=format_time(self.time)
+    self.display_blinds()
+
+  def reset(self):
+    self.popup=ConfirmReset(size_hint=(0.8,0.2))
+    self.popup.bind(on_dismiss=self.confirm_reset)
+    self.popup.open()
+
+  def confirm_reset(self,arg2):
+    if self.popup.confirmed==True:
 # reset blinds
       self.blindlevel=0
       self.blindsrunning=False
+      self.time=self.blindsinterval
       self.ids.timeuntilnextblinds.bgwidth=0
       self.ids.timeuntilnextblinds.color="white"
 # reset game time
@@ -116,10 +143,11 @@ class MainView(StackLayout):
 # stop timers if they are running
       if self.ids.startstop.text=="stop":
         self.start_blinds_timer()
-
-    self.time=self.blindsinterval
-    self.ids.timeuntilnextblinds.text=format_time(self.time)
-    self.display_blinds()
+# update display
+      self.ids.timeuntilnextblinds.text=format_time(self.time)
+      self.display_blinds()
+    else:
+      pass
 
 class BlindsTimer(App):
   def build(self):
