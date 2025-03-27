@@ -1,7 +1,7 @@
 <Widget>:
     font_name: "DejaVuSans"
 
-<TextField@Label>:
+<TextField@ButtonBehavior+Label>:
     size_hint: (1.0,dp(60)/app.height)
     canvas:
         Color:
@@ -41,6 +41,7 @@
         TextField:
             id: nextblinds
             text: "-- : --"
+            on_release: root.show_blind_structure()
         InfoField:
             id: timeuntilnextblinds
             font_size: dp(32)
@@ -83,3 +84,25 @@
         ConfirmButton:
             text: "nah"
             on_release: root.confirm("nah")
+
+<BlindsStructure>:
+    StackLayout:
+        orientation: "tb-lr"
+        RecycleView:
+            id: blindsstructure
+            size_hint: (1, 0.95)
+            viewclass: "BlindsDisplayRow"
+            RecycleGridLayout:
+                id: blindsstructureinner
+                cols: 1
+                size_hint: (1,dp(25))
+                height: self.minimum_height
+
+<BlindsDisplayRow@Label>:
+    text_size: self.size
+    halign: "left"
+    valign: "center"
+#    size_hint: (1,dp(25))
+    canvas:
+        Color:
+            rgba: (0.8,0.5,0.2,1)

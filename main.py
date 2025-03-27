@@ -10,6 +10,7 @@ from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import sp
 from kivy.properties import BooleanProperty
+from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
@@ -49,6 +50,17 @@ class ConfirmReset(Popup):
       self.confirmed=False
 
     self.dismiss()
+
+class BlindsStructure(Popup):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+    self.title="Blinds structure"
+
+  def load_blinds_display(self,blinds):
+    data=[]
+    for i,b in enumerate(blinds):
+      data.append({"text": "%d: %d / %d"%(i+1,b,b*2)})
+    self.ids.blindsstructure.data=data
 
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
@@ -148,6 +160,11 @@ class MainView(StackLayout):
       self.display_blinds()
     else:
       pass
+
+  def show_blind_structure(self):
+    self.popup=BlindsStructure()
+    self.popup.load_blinds_display(self.smallblinds)
+    self.popup.open()
 
 class BlindsTimer(App):
   def build(self):
