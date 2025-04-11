@@ -66,18 +66,19 @@ class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 # set up blinds, display initial values
-    self.smallblinds=[ 25,50,100,150,200,300,400,500,600,800,1000,1500,2000,3000,4000,5000 ]
+    self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
+    self.intervals=[ 60*x for x in [ 20,20,20,15,15,15,10,10,10,10,10,10,10,10,10]]
 
 # set up trackers
 
     self.blindlevel=0
     self.blindsrunning=False
-    self.blindsinterval=900
+    self.current_interval=self.intervals[self.blindlevel]
     self.gametime=0
-    self.time=self.blindsinterval
+    self.time=self.current_interval
 
 # get time, set initial display
-    self.ids.timeuntilnextblinds.text=format_time(self.blindsinterval)
+    self.ids.timeuntilnextblinds.text=format_time(self.current_interval)
 
 # display blinds
     self.display_blinds()
@@ -99,7 +100,7 @@ class MainView(StackLayout):
 
     if self.blindlevel+1<len(self.smallblinds):
       self.ids.timeuntilnextblinds.text=format_time(self.time)
-      self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.blindsinterval))*self.ids.timeuntilnextblinds.width
+      self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.current_interval))*self.ids.timeuntilnextblinds.width
       self.time-=1
     else:
       self.ids.timeuntilnextblinds.text="-- : --"
@@ -113,9 +114,9 @@ class MainView(StackLayout):
 
 # handle timer getting to zero
     if self.time<0:
-      self.time=self.blindsinterval
       self.blindlevel+=1
       self.ids.timeuntilnextblinds.bgwidth=0
+      self.time=self.intervals[self.blindlevel]
       self.display_blinds()
 
   def start_blinds_timer(self):
@@ -132,7 +133,8 @@ class MainView(StackLayout):
     elif opt=="next":
       self.blindlevel=min(len(self.smallblinds)-1,self.blindlevel+1)
 
-    self.time=self.blindsinterval
+    self.current_interval=self.intervals[self.blindlevel]
+    self.time=self.current_interval
     self.ids.timeuntilnextblinds.text=format_time(self.time)
     self.display_blinds()
 
@@ -145,8 +147,9 @@ class MainView(StackLayout):
     if self.popup.confirmed==True:
 # reset blinds
       self.blindlevel=0
+      self.current_interval=self.intervals[self.blindlevel]
       self.blindsrunning=False
-      self.time=self.blindsinterval
+      self.time=self.current_interval
       self.ids.timeuntilnextblinds.bgwidth=0
       self.ids.timeuntilnextblinds.color="white"
 # reset game time
