@@ -59,8 +59,12 @@ class BlindsStructure(Popup):
   def load_blinds_display(self,blinds,intervals):
     data=[]
     for i,b in enumerate(blinds):
-      data.append({"text": "%d: %d / %d (%s)"%(i+1,b,b*2,format_time(intervals[i]))})
-    self.ids.blindsstructure.data=data
+      row=BlindsDisplayRow(text="%d: %d / %d (%s)"%(i+1,b,b*2,format_time(intervals[i])))
+      self.ids.blindsstructure.add_widget(row)
+
+class BlindsDisplayRow(Label):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
 
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):

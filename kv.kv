@@ -88,21 +88,14 @@
 <BlindsStructure>:
     StackLayout:
         orientation: "tb-lr"
-        RecycleView:
-            id: blindsstructure
-            size_hint: (1, 0.95)
-            viewclass: "BlindsDisplayRow"
-            RecycleGridLayout:
-                id: blindsstructureinner
-                cols: 1
-#                size_hint: (1,dp(25)/app.height)
-                height: self.minimum_height
+        id: blindsstructure
+        size_hint: (1, 0.95)
 
 <BlindsDisplayRow@Label>:
-    size_hint: (1,dp(12)/app.height)
+    size_hint: (1,dp(36)/app.height)
     text_size: self.size
     halign: "left"
-#    valign: "center"
+    valign: "center"
     canvas:
         Color:
             rgba: (0.5,0.5,0.5,0.4)
