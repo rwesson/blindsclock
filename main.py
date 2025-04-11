@@ -56,10 +56,10 @@ class BlindsStructure(Popup):
     super().__init__(**kwargs)
     self.title="Blinds structure"
 
-  def load_blinds_display(self,blinds):
+  def load_blinds_display(self,blinds,intervals):
     data=[]
     for i,b in enumerate(blinds):
-      data.append({"text": "%d: %d / %d"%(i+1,b,b*2)})
+      data.append({"text": "%d: %d / %d (%s)"%(i+1,b,b*2,format_time(intervals[i]))})
     self.ids.blindsstructure.data=data
 
 class MainView(StackLayout):
@@ -166,7 +166,7 @@ class MainView(StackLayout):
 
   def show_blind_structure(self):
     self.popup=BlindsStructure()
-    self.popup.load_blinds_display(self.smallblinds)
+    self.popup.load_blinds_display(self.smallblinds,self.intervals)
     self.popup.open()
 
 class BlindsTimer(App):
