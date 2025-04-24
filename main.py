@@ -1,7 +1,9 @@
 #!/usr/bin/python
 
 import datetime
+import json
 import math
+import os
 import random
 
 from kivy.clock import Clock
@@ -173,11 +175,43 @@ class MainView(StackLayout):
     self.popup.load_blinds_display(self.smallblinds,self.intervals)
     self.popup.open()
 
+  def show_info(self):
+    content=StackLayout(orientation="tb-lr")
+    appinfo={
+      "Version":version.version["revno"],
+      "Last modified":version.version["revdate"],
+    }
+    content.add_widget(Label(size_hint=(1,0.05)))
+    content.add_widget(InfoLabel(text="APP INFO"))
+
+    for key,value in appinfo.items():
+      content.add_widget(InfoLabel(text="   "+key+" "+value))
+
+    info=Popup(title="Info!",content=content)
+    info.open()
+
+
+class Version:
+  def __init__(self):
+    if os.path.exists("local/version.json"):
+      f=open("local/version.json")
+      self.version=json.load(f)
+      f.close()
+    else:
+      self.version={"revno": "--","revdate": "--"}
+
+
+version=Version()
+
 class BlindsTimer(App):
   def build(self):
     self.width = Window.width
     self.height = Window.height
     return MainView()
+
+class InfoLabel(Label):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
 
 if __name__ == '__main__':
     BlindsTimer().run()

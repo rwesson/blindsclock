@@ -14,7 +14,10 @@
     size_hint: (1.0,dp(80)/app.height)
 
 <Controls@Button>:
-    size_hint: (0.25,1)
+    size_hint: (0.22,1)
+
+<Help@Button>:
+    size_hint: (0.12,1)
 
 <ConfirmButton@Button>:
     size_hint: (0.5,1)
@@ -69,6 +72,9 @@
         Controls:
             text: "reset"
             on_release: root.reset()
+        Help:
+            text: "?"
+            on_release: root.show_info()
 
 <ConfirmReset>:
     canvas:
@@ -102,3 +108,9 @@
         Rectangle:
             pos: self.pos
             size: (self.width,self.height)
+
+<InfoLabel@Label>:
+    size: (0.9*app.width,dp(25))
+    size_hint: (1,dp(25)/app.height)
+    text_size: self.size
+    halign: "left"
