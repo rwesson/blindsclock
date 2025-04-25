@@ -58,13 +58,17 @@ class BlindsStructure(Popup):
     super().__init__(**kwargs)
     self.title="Blinds structure"
 
-  def load_blinds_display(self,blinds,intervals):
+  def load_blinds_display(self,blinds,intervals,currentlevel):
     data=[]
     for i,b in enumerate(blinds):
-      row=BlindsDisplayRow(text="%d: %d / %d (%s)"%(i+1,b,b*2,format_time(intervals[i])))
+      highlight=i==currentlevel
+      altrow=i%2==0
+      row=BlindsDisplayRow(text="%d: %d / %d (%s)"%(i+1,b,b*2,format_time(intervals[i])),highlight=highlight,altrow=altrow)
       self.ids.blindsstructure.add_widget(row)
 
 class BlindsDisplayRow(Label):
+  highlight=BooleanProperty()
+  altrow=BooleanProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
@@ -172,7 +176,7 @@ class MainView(StackLayout):
 
   def show_blind_structure(self):
     self.popup=BlindsStructure()
-    self.popup.load_blinds_display(self.smallblinds,self.intervals)
+    self.popup.load_blinds_display(self.smallblinds,self.intervals,self.blindlevel)
     self.popup.open()
 
   def show_info(self):

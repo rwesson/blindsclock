@@ -102,9 +102,13 @@
     text_size: self.size
     halign: "left"
     valign: "center"
+    bold: self.highlight
+    color: (0.67,0.93,1,1) if self.highlight else (1,1,1,1)
+    font_size: sp(18) if self.highlight else sp(15)
+    padding: [dp(10),dp(5)]
     canvas:
         Color:
-            rgba: (0.5,0.5,0.5,0.4)
+            rgba: (0.5,0.5,0.5,0.1) if self.altrow else (0,0,0,0)
         Rectangle:
             pos: self.pos
             size: (self.width,self.height)
