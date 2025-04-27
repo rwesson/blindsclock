@@ -45,8 +45,9 @@
             id: nextblinds
             text: "-- : --"
             on_release: root.show_blind_structure()
-        InfoField:
+        BlindTimeHandler:
             id: timeuntilnextblinds
+            size_hint: (1.0,dp(80)/app.height)
             font_size: dp(32)
             bgwidth: 0
             text: "-- : --"

@@ -11,7 +11,7 @@ from kivy.config import Config
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import sp
-from kivy.properties import BooleanProperty
+from kivy.properties import BooleanProperty,NumericProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
 from kivy.uix.label import Label
@@ -72,9 +72,21 @@ class BlindsDisplayRow(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
+class BlindTimeHandler(Label):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+  def on_touch_down(self,touch):
+    if self.collide_point(*touch.pos) and touch.is_double_tap:
+      ref=self.parent.parent
+      newpos=(touch.pos[0])/self.width * ref.current_interval
+      ref.time=ref.current_interval-newpos
+      ref.ids.timeuntilnextblinds.text=format_time(ref.time)
+      ref.ids.timeuntilnextblinds.bgwidth=(1-(ref.time/ref.current_interval))*ref.ids.timeuntilnextblinds.width
+
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
+    current_interval=NumericProperty
 # set up blinds, display initial values
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
     self.intervals=[ 60*x for x in [ 20,20,20,15,15,15,10,10,10,10,10,10,10,10,10]]
