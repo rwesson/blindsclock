@@ -34,6 +34,14 @@ if platform=="android":
 else:
   Window.size=(400,780) # mobile gives 1080,2116
 
+# game speeds
+gamespeeds={
+ "slow":      [ 20,20,20,20,20,20,20,20,20,20,20,20,20,20,20 ],
+ "standard":  [ 20,20,20,15,15,15,10,10,10,10,10,10,10,10,10 ],
+ "fast":      [ 10,10,10,7.5,7.5,7.5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ],
+ "very fast": [  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ]
+}
+
 def format_time(s,h=False):
   if h:
     return "%02d : %02d : %02d"%(math.floor(s/3600),math.floor(s%3600/60),s%60)
@@ -89,7 +97,7 @@ class MainView(StackLayout):
     current_interval=NumericProperty
 # set up blinds, display initial values
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
-    self.intervals=[ 60*x for x in [ 20,20,20,15,15,15,10,10,10,10,10,10,10,10,10]]
+    self.intervals=[ 60*x for x in gamespeeds["standard"]]
 
 # set up trackers
 
