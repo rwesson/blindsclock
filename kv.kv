@@ -115,7 +115,25 @@
             size: (self.width,self.height)
 
 <InfoLabel@Label>:
-    size: (0.9*app.width,dp(25))
     size_hint: (1,dp(25)/app.height)
     text_size: self.size
     halign: "left"
+
+<BlindsSelectorRow@StackLayout>:
+    orientation: "lr-tb"
+    size_hint: (1,dp(30)/app.height)
+
+<GameSpeedLabel@Label>:
+    halign: "left"
+    valign: "center"
+    size_hint: (0.9,1)
+    text_size: self.size
+
+<CheckBox>:
+    size_hint: (0.1,1)
+    canvas:
+        Color:
+            rgba: (0.5,0.5,1.0,0.1)
+        Rectangle:
+            pos: self.pos
+            size: (self.width,self.height)

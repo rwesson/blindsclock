@@ -11,9 +11,10 @@ from kivy.config import Config
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import sp
-from kivy.properties import BooleanProperty,NumericProperty
+from kivy.properties import BooleanProperty,NumericProperty,StringProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
+from kivy.uix.checkbox import CheckBox
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.stacklayout import StackLayout
@@ -80,6 +81,19 @@ class BlindsDisplayRow(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
+class BlindsSelectorRow(StackLayout):
+  active=BooleanProperty(False)
+  text=StringProperty()
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+    checkbox=CheckBox(active=self.active,group="gamespeed")
+    checkbox.bind(active=self.test)
+    self.add_widget(checkbox)
+    self.add_widget(GameSpeedLabel(text=" "+self.text))
+
+  def test(self,wtf,fuck):
+    print(vars(wtf))
+
 class BlindTimeHandler(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
@@ -94,7 +108,7 @@ class BlindTimeHandler(Label):
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
-    current_interval=NumericProperty
+    current_interval=NumericProperty()
 # set up blinds, display initial values
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
     self.intervals=[ 60*x for x in gamespeeds["standard"]]
@@ -211,9 +225,24 @@ class MainView(StackLayout):
     for key,value in appinfo.items():
       content.add_widget(InfoLabel(text="   "+key+" "+value))
 
+    content.add_widget(Label(size_hint=(1,0.05)))
+    content.add_widget(InfoLabel(text="GAME SPEED"))
+
+    for speed in ["Standard","Slow","Fast","Very Fast"]:
+      if speed=="Standard":
+        content.add_widget(BlindsSelectorRow(text=speed,active=True))
+      else:
+        content.add_widget(BlindsSelectorRow(text=speed))
+
+    confirmgamespeed = Button(text="set",size_hint=(1,0.05))
+    confirmgamespeed.bind(on_press = self.set_game_speed)
+    content.add_widget(confirmgamespeed)
+
     info=Popup(title="Info!",content=content)
     info.open()
 
+  def set_game_speed(self,fuck):
+    print("newspeed",fuck)
 
 class Version:
   def __init__(self):
@@ -234,6 +263,10 @@ class BlindsTimer(App):
     return MainView()
 
 class InfoLabel(Label):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+
+class GameSpeedLabel(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
