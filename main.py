@@ -43,6 +43,8 @@ gamespeeds={
  "very fast": [  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ]
 }
 
+gamespeed="standard"
+
 def format_time(s,h=False):
   if h:
     return "%02d : %02d : %02d"%(math.floor(s/3600),math.floor(s%3600/60),s%60)
@@ -81,18 +83,24 @@ class BlindsDisplayRow(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
+class GameSpeedCheckBox(CheckBox):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+    self.bind(active=self.select_game_speed)
+
+  def select_game_speed(self,button,state):
+    global gamespeed
+    if self.active:
+      gamespeed=self.parent.text.lower()
+
 class BlindsSelectorRow(StackLayout):
   active=BooleanProperty(False)
   text=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
-    checkbox=CheckBox(active=self.active,group="gamespeed")
-    checkbox.bind(active=self.test)
+    checkbox=GameSpeedCheckBox(active=self.active,group="gamespeed")
     self.add_widget(checkbox)
     self.add_widget(GameSpeedLabel(text=" "+self.text))
-
-  def test(self,wtf,fuck):
-    print(vars(wtf))
 
 class BlindTimeHandler(Label):
   def __init__(self,*args,**kwargs):
@@ -109,9 +117,14 @@ class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
     current_interval=NumericProperty()
+    self.initialise("standard")
+
 # set up blinds, display initial values
+  def initialise(self,gamespeed="standard"):
+    print("setting up %s game..."%gamespeed)
+    self.gamespeed=gamespeed
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
-    self.intervals=[ 60*x for x in gamespeeds["standard"]]
+    self.intervals=[ 60*x for x in gamespeeds[self.gamespeed]]
 
 # set up trackers
 
@@ -228,8 +241,8 @@ class MainView(StackLayout):
     content.add_widget(Label(size_hint=(1,0.05)))
     content.add_widget(InfoLabel(text="GAME SPEED"))
 
-    for speed in ["Standard","Slow","Fast","Very Fast"]:
-      if speed=="Standard":
+    for speed in ["Standard","Slow","Fast","Very fast"]:
+      if speed.lower()==self.gamespeed:
         content.add_widget(BlindsSelectorRow(text=speed,active=True))
       else:
         content.add_widget(BlindsSelectorRow(text=speed))
@@ -238,11 +251,12 @@ class MainView(StackLayout):
     confirmgamespeed.bind(on_press = self.set_game_speed)
     content.add_widget(confirmgamespeed)
 
-    info=Popup(title="Info!",content=content)
-    info.open()
+    self.info=Popup(title="Info!",content=content)
+    self.info.open()
 
-  def set_game_speed(self,fuck):
-    print("newspeed",fuck)
+  def set_game_speed(self,button):
+    self.initialise(gamespeed)
+    self.info.dismiss()
 
 class Version:
   def __init__(self):

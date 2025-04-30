@@ -129,7 +129,7 @@
     size_hint: (0.9,1)
     text_size: self.size
 
-<CheckBox>:
+<GameSpeedCheckBox@CheckBox>:
     size_hint: (0.1,1)
     canvas:
         Color:
@@ -137,3 +137,4 @@
         Rectangle:
             pos: self.pos
             size: (self.width,self.height)
+#    on_active: self.select_game_speed()
