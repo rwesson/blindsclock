@@ -35,6 +35,8 @@ if platform=="android":
 else:
   Window.size=(400,780) # mobile gives 1080,2116
 
+from kivy.core.audio import SoundLoader
+
 # game speeds
 gamespeeds={
  "slow":      [ 20,20,20,20,20,20,20,20,20,20,20,20,20,20,20 ],
@@ -177,6 +179,8 @@ class MainView(StackLayout):
       self.ids.timeuntilnextblinds.bgwidth=0
       self.time=self.intervals[self.blindlevel]
       self.display_blinds()
+      notification=SoundLoader.load("clip.mp3")
+      notification.play()
 
   def start_blinds_timer(self):
     if self.ids.startstop.text=="start":

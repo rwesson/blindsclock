@@ -13,7 +13,7 @@ package.domain = org
 source.dir = .
 
 # (list) Source files to include (let empty to include all the files)
-source.include_exts = py,png,jpg,kv,json
+source.include_exts = py,png,jpg,kv,json,mp3
 
 # (list) List of inclusions using pattern matching
 source.include_patterns = local/version.json, *.kv,*.py
