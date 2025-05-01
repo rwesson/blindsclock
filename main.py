@@ -176,6 +176,7 @@ class MainView(StackLayout):
 # handle timer getting to zero
     if self.time<0:
       self.blindlevel+=1
+      self.current_interval=self.intervals[self.blindlevel]
       self.ids.timeuntilnextblinds.bgwidth=0
       self.time=self.intervals[self.blindlevel]
       self.display_blinds()
