@@ -91,11 +91,12 @@ class GameSpeedCheckBox(CheckBox):
   def select_game_speed(self,button,state):
     global gamespeed
     if self.active:
-      gamespeed=self.parent.text.lower()
+      gamespeed=self.parent.gamespeed
 
 class BlindsSelectorRow(StackLayout):
   active=BooleanProperty(False)
   text=StringProperty()
+  gamespeed=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
     checkbox=GameSpeedCheckBox(active=self.active,group="gamespeed")
@@ -242,11 +243,14 @@ class MainView(StackLayout):
     content.add_widget(Label(size_hint=(1,0.05)))
     content.add_widget(InfoLabel(text="GAME SPEED"))
 
-    for speed in ["Standard","Slow","Fast","Very fast"]:
-      if speed.lower()==self.gamespeed:
-        content.add_widget(BlindsSelectorRow(text=speed,active=True))
-      else:
-        content.add_widget(BlindsSelectorRow(text=speed))
+    for speed in ["Slow","Standard","Fast","Very fast"]:
+      approxtime = round(2*sum([ x for x in gamespeeds[speed.lower()] ])/60)
+      hourstring = "hour" if approxtime==2 else "hours"
+      timefmt = "%d" if approxtime%2==0 else "%3.1f"
+      timestring = "%s (~ "+timefmt+" "+hourstring+")"
+      labeltext = timestring%(speed,0.5*approxtime)
+      active=speed.lower()==self.gamespeed
+      content.add_widget(BlindsSelectorRow(gamespeed=speed.lower(),text=labeltext,active=active))
 
     confirmgamespeed = Button(text="set",size_hint=(1,0.05))
     confirmgamespeed.bind(on_press = self.set_game_speed)
