@@ -118,6 +118,7 @@ class MainView(StackLayout):
     super().__init__(**kwargs)
     current_interval=NumericProperty()
     self.initialise("standard")
+    Clock.schedule_interval(self.update_display,1)
 
 # set up blinds, display initial values
   def initialise(self,gamespeed="standard"):
@@ -126,6 +127,8 @@ class MainView(StackLayout):
     self.gamespeed=gamespeed
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
     self.intervals=[ 60*x for x in gamespeeds[self.gamespeed]]
+    self.ids.startstop.text="start"
+    self.ids.timeuntilnextblinds.bgwidth=0
 
 # set up trackers
 
@@ -140,9 +143,6 @@ class MainView(StackLayout):
 
 # display blinds
     self.display_blinds()
-
-# start clock
-    Clock.schedule_interval(self.update_display,1)
 
   def display_blinds(self):
     self.ids.currentblinds.text=("%d / %d"%(self.smallblinds[self.blindlevel],self.smallblinds[self.blindlevel]*2))
