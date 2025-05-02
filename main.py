@@ -200,6 +200,7 @@ class MainView(StackLayout):
 
     self.current_interval=self.intervals[self.blindlevel]
     self.time=self.current_interval
+    self.ids.timeuntilnextblinds.bgwidth=0
     self.ids.timeuntilnextblinds.text=format_time(self.time)
     self.display_blinds()
 
