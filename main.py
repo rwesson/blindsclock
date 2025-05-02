@@ -265,7 +265,8 @@ class MainView(StackLayout):
     self.info.open()
 
   def set_game_speed(self,button):
-    self.initialise(gamespeed)
+    if gamespeed!=self.gamespeed:
+      self.initialise(gamespeed)
     self.info.dismiss()
 
 class Version:
