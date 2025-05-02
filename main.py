@@ -250,9 +250,12 @@ class MainView(StackLayout):
 
     for speed in ["Slow","Standard","Fast","Very fast"]:
       approxtime = round(2*sum([ x for x in gamespeeds[speed.lower()] ])/60)
-      hourstring = "hour" if approxtime==2 else "hours"
+      hourstring = "hr" if approxtime==2 else "hrs"
       timefmt = "%d" if approxtime%2==0 else "%3.1f"
-      timestring = "%s (~ "+timefmt+" "+hourstring+")"
+
+      intervals = sorted(list(set(gamespeeds[speed.lower()])),reverse=True)
+      intervalstext = " / ".join([str(x) for x in intervals] )
+      timestring = "%s ("+intervalstext+" mins, ~ "+timefmt+" "+hourstring+" total)"
       labeltext = timestring%(speed,0.5*approxtime)
       active=speed.lower()==self.gamespeed
       content.add_widget(BlindsSelectorRow(gamespeed=speed.lower(),text=labeltext,active=active))
