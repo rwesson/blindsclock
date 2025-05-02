@@ -193,7 +193,8 @@ class MainView(StackLayout):
 
   def blinds_control(self,opt):
     if opt=="prev":
-      self.blindlevel=max(0,self.blindlevel-1)
+      if self.time>(self.current_interval-10):
+        self.blindlevel=max(0,self.blindlevel-1)
     elif opt=="next":
       self.blindlevel=min(len(self.smallblinds)-1,self.blindlevel+1)
 
