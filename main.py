@@ -4,6 +4,7 @@ import datetime
 import json
 import math
 import os
+import random
 
 from kivy.clock import Clock
 from kivy.config import Config
@@ -177,7 +178,7 @@ class MainView(StackLayout):
       self.ids.timeuntilnextblinds.bgwidth=0
       self.time=self.intervals[self.blindlevel]
       self.display_blinds()
-      notification=SoundLoader.load("sounds/clip3.mp3")
+      notification=SoundLoader.load("sounds/clip%d.mp3"%random.randrange(1,9))
       notification.play()
 
   def start_blinds_timer(self):
