@@ -2,7 +2,7 @@
     font_name: "DejaVuSans"
 
 <TextField@ButtonBehavior+Label>:
-    size_hint: (1.0,dp(60)/app.height)
+    size_hint: (1.0,0.08)
     canvas:
         Color:
             rgba: (0,1,1,0.2)
@@ -11,7 +11,7 @@
             size: (self.width,self.height)
 
 <InfoField@Label>:
-    size_hint: (1.0,dp(80)/app.height)
+    size_hint: (1.0,0.11)
 
 <Controls@Button>:
     size_hint: (0.22,1)
@@ -38,7 +38,7 @@
         Label:
             id: currentblinds
             font_size: dp(64)
-            size_hint: (1.0,dp(410)/app.height)
+            size_hint: (1.0,0.54)
             color: "#aaeeff"
             text: "-- : --"
             text_size: self.size
@@ -50,7 +50,7 @@
             on_release: root.show_blind_structure()
         BlindTimeHandler:
             id: timeuntilnextblinds
-            size_hint: (1.0,dp(80)/app.height)
+            size_hint: (1.0,0.11)
             font_size: dp(32)
             bgwidth: 0
             text: "-- : --"
@@ -102,7 +102,7 @@
         size_hint: (1, 0.95)
 
 <BlindsDisplayRow@Label>:
-    size_hint: (1,dp(36)/app.height)
+    size_hint: (1,0.05)
     text_size: self.size
     halign: "left"
     valign: "center"
@@ -118,13 +118,13 @@
             size: (self.width,self.height)
 
 <InfoLabel@Label>:
-    size_hint: (1,dp(25)/app.height)
+    size_hint: (1,0.033)
     text_size: self.size
     halign: "left"
 
 <BlindsSelectorRow@StackLayout>:
     orientation: "lr-tb"
-    size_hint: (1,dp(30)/app.height)
+    size_hint: (1,0.04)
 
 <GameSpeedLabel@Label>:
     halign: "left"
