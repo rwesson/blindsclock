@@ -27,10 +27,7 @@ Builder.load_file("kv.kv")
 # set up platform-specific things
 
 if platform=="android":
-  from android.permissions import request_permissions, Permission
   from kivy.core.audio import audio_android
-  request_permissions([Permission.READ_EXTERNAL_STORAGE,Permission.WRITE_EXTERNAL_STORAGE])
-
 else:
   Window.size=(400,780) # mobile gives 1080,2116
 
