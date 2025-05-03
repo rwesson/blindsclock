@@ -120,13 +120,13 @@
             size: (self.width,self.height)
 
 <InfoLabel@Label>:
-    size_hint: (1,0.033)
+    size_hint: (1,max(0.033,dp(24)/app.height))
     text_size: self.size
     halign: "left"
 
 <BlindsSelectorRow@StackLayout>:
     orientation: "lr-tb"
-    size_hint: (1,0.04)
+    size_hint: (1,max(0.04,dp(32)/app.height))
 
 <GameSpeedLabel@Label>:
     halign: "left"
@@ -142,4 +142,3 @@
         Rectangle:
             pos: self.pos
             size: (self.width,self.height)
-#    on_active: self.select_game_speed()
