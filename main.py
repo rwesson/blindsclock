@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import datetime
+import glob
 import json
 import math
 import os
@@ -43,6 +44,11 @@ gamespeeds={
 }
 
 gamespeed="standard"
+
+# notifications
+
+sounds=glob.glob("sounds/*mp3")
+random.shuffle(sounds)
 
 def format_time(s,h=False):
   if h:
@@ -186,7 +192,7 @@ class MainView(StackLayout):
       self.ids.timeuntilnextblinds.bgwidth=0
       self.time=self.intervals[self.blindlevel]
       self.display_blinds()
-      notification=SoundLoader.load("sounds/clip%d.mp3"%random.randrange(1,9))
+      notification=SoundLoader.load(sounds[self.blindlevel%len(sounds)])
       notification.play()
 
   def start_blinds_timer(self):
