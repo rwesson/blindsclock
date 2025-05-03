@@ -82,6 +82,7 @@ class BlindsDisplayRow(Label):
     super().__init__(**kwargs)
 
 class GameSpeedCheckBox(CheckBox):
+  selector=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
     self.bind(active=self.select_game_speed)
@@ -89,7 +90,7 @@ class GameSpeedCheckBox(CheckBox):
   def select_game_speed(self,button,state):
     global gamespeed
     if self.active:
-      gamespeed=self.parent.gamespeed
+      gamespeed=self.selector
 
 class BlindsSelectorRow(StackLayout):
   active=BooleanProperty(False)
@@ -97,7 +98,7 @@ class BlindsSelectorRow(StackLayout):
   gamespeed=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
-    checkbox=GameSpeedCheckBox(active=self.active,group="gamespeed")
+    checkbox=GameSpeedCheckBox(active=self.active,group="gamespeed",selector=self.gamespeed)
     self.add_widget(checkbox)
     self.add_widget(GameSpeedLabel(text=" "+self.text))
 
@@ -292,9 +293,13 @@ class InfoLabel(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
-class GameSpeedLabel(Label):
+class GameSpeedLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
+
+  def on_touch_down(self,touch):
+    if self.collide_point(*touch.pos):
+      self.parent.children[1].active=True
 
 if __name__ == '__main__':
     BlindsTimer().run()
