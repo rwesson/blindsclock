@@ -128,6 +128,10 @@ class BlindTimeHandler(Label):
       ref.ids.timeuntilnextblinds.text=format_time(ref.time)
       ref.ids.timeuntilnextblinds.bgwidth=(1-(ref.time/ref.current_interval))*ref.ids.timeuntilnextblinds.width
 
+class InfoLabel(Label):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
@@ -303,10 +307,6 @@ class BlindsTimer(App):
     self.width = Window.width
     self.height = Window.height
     return MainView()
-
-class InfoLabel(Label):
-  def __init__(self,*args,**kwargs):
-    super().__init__(**kwargs)
 
 if __name__ == '__main__':
     BlindsTimer().run()
