@@ -42,13 +42,22 @@ gamespeeds={
  "fast":      [ 10,10,10,7.5,7.5,7.5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ],
  "very fast": [  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ]
 }
-
 gamespeed="standard"
 
-# notifications
+# notification sounds
+gamesounds=[
+ "Tune Down",
+ "S.W.A.T.",
+ "Battle",
+ "Insomnia",
+ "Get Lucky",
+ "Grandstand",
+ "Beethoven",
+ "Go!"
+]
+gamesound=0
 
-sounds=glob.glob("sounds/*mp3")
-random.shuffle(sounds)
+# notifications
 
 def format_time(s,h=False):
   if h:
@@ -88,18 +97,27 @@ class BlindsDisplayRow(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
-class GameSpeedCheckBox(CheckBox):
+class SelectorCheckBox(CheckBox):
+  group=StringProperty()
   selector=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
-    self.bind(active=self.select_game_speed)
+    self.bind(active=self.select_option)
 
-  def select_game_speed(self,button,state):
-    global gamespeed
-    if self.active:
-      gamespeed=self.selector
+  def select_option(self,button,state):
+    if self.group=="gamespeed":
+      global gamespeed
+      if self.active:
+        gamespeed=self.selector
+    elif self.group=="sounds":
+      global gamesound
+      if self.active:
+        gamesound=self.selector
+      if gamesound in gamesounds:
+        notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesounds.index(gamesound)+1))
+        notification.play()
 
-class GameSpeedLabel(ButtonBehavior,Label):
+class SelectorLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
@@ -107,15 +125,16 @@ class GameSpeedLabel(ButtonBehavior,Label):
     if self.collide_point(*touch.pos):
       self.parent.children[1].active=True
 
-class GameSpeedSelectorRow(StackLayout):
+class SelectorRow(StackLayout):
   active=BooleanProperty(False)
   text=StringProperty()
-  gamespeed=StringProperty()
+  selector=StringProperty()
+  group=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
-    checkbox=GameSpeedCheckBox(active=self.active,group="gamespeed",selector=self.gamespeed)
+    checkbox=SelectorCheckBox(active=self.active,group=self.group,selector=self.selector)
     self.add_widget(checkbox)
-    self.add_widget(GameSpeedLabel(text=" "+self.text))
+    self.add_widget(SelectorLabel(text=" "+self.text))
 
 class BlindTimeHandler(Label):
   def __init__(self,*args,**kwargs):
@@ -144,6 +163,7 @@ class MainView(StackLayout):
     print("setting up %s game..."%gamespeed)
     print("game time approx. %d minutes"%sum(gamespeeds[gamespeed]))
     self.gamespeed=gamespeed
+    self.gamesound=gamesound
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
     self.intervals=[ 60*x for x in gamespeeds[self.gamespeed]]
     self.ids.startstop.text="start"
@@ -196,7 +216,14 @@ class MainView(StackLayout):
       self.ids.timeuntilnextblinds.bgwidth=0
       self.time=self.intervals[self.blindlevel]
       self.display_blinds()
-      notification=SoundLoader.load(sounds[self.blindlevel%len(sounds)])
+      if isinstance(self.gamesound,int):
+        soundfile="clip%d.mp3"%(self.gamesound+1)
+      elif self.gamesound=="shuffle":
+        soundfile="clip%d.mp3"%random.randint(0,len(gamesounds)+1)
+      elif self.gamesound=="sequence":
+        soundfile="clip%d.mp3"%self.blindlevel%len(gamesounds)+1
+      print("sounds/%s"%soundfile)
+      notification=SoundLoader.load("sounds/%s"%soundfile)
       notification.play()
 
   def start_blinds_timer(self):
@@ -276,11 +303,24 @@ class MainView(StackLayout):
       timestring = "%s ("+intervalstext+" mins, ~ "+timefmt+" "+hourstring+" total)"
       labeltext = timestring%(speed,0.5*approxtime)
       active=speed.lower()==self.gamespeed
-      content.add_widget(GameSpeedSelectorRow(gamespeed=speed.lower(),text=labeltext,active=active))
+      content.add_widget(SelectorRow(selector=speed.lower(),group="gamespeed",text=labeltext,active=active))
 
     confirmgamespeed = Button(text="set",size_hint=(1,0.05))
     confirmgamespeed.bind(on_press = self.set_game_speed)
     content.add_widget(confirmgamespeed)
+
+    content.add_widget(Label(size_hint=(1,0.05)))
+    content.add_widget(InfoLabel(text="BLINDS UP SOUND"))
+
+    for sound in gamesounds:
+      content.add_widget(SelectorRow(selector=sound,group="sounds",text=sound))
+
+    content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds"))
+    content.add_widget(SelectorRow(selector="shuffle",text="shuffle",group="sounds"))
+
+    confirmgamesound = Button(text="set",size_hint=(1,0.05))
+    confirmgamesound.bind(on_press = self.set_game_sound)
+    content.add_widget(confirmgamesound)
 
     self.info=Popup(title="Info!",content=content)
     self.info.open()
@@ -288,6 +328,11 @@ class MainView(StackLayout):
   def set_game_speed(self,button):
     if gamespeed!=self.gamespeed:
       self.initialise(gamespeed)
+    self.info.dismiss()
+
+  def set_game_sound(self,button):
+    gamesound=self.gamesound
+    print(self.gamesound)
     self.info.dismiss()
 
 class Version:

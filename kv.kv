@@ -124,17 +124,17 @@
     text_size: self.size
     halign: "left"
 
-<GameSpeedSelectorRow@StackLayout>:
+<SelectorRow@StackLayout>:
     orientation: "lr-tb"
     size_hint: (1,max(0.04,dp(32)/app.height))
 
-<GameSpeedLabel@Label>:
+<SelectorLabel@Label>:
     halign: "left"
     valign: "center"
     size_hint: (0.9,1)
     text_size: self.size
 
-<GameSpeedCheckBox@CheckBox>:
+<SelectorCheckBox@CheckBox>:
     size_hint: (0.1,1)
     canvas:
         Color:
