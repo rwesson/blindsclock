@@ -112,10 +112,12 @@ class SelectorCheckBox(CheckBox):
     elif self.group=="sounds":
       global gamesound
       if self.active:
-        gamesound=self.selector
-      if gamesound in gamesounds:
-        notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesounds.index(gamesound)+1))
-        notification.play()
+        try:
+          gamesound=gamesounds.index(self.selector)
+          notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
+          notification.play()
+        except:
+          gamesound=self.selector
 
 class SelectorLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
@@ -219,10 +221,9 @@ class MainView(StackLayout):
       if isinstance(self.gamesound,int):
         soundfile="clip%d.mp3"%(self.gamesound+1)
       elif self.gamesound=="shuffle":
-        soundfile="clip%d.mp3"%random.randint(0,len(gamesounds)+1)
+        soundfile="clip%d.mp3"%random.randint(1,len(gamesounds))
       elif self.gamesound=="sequence":
-        soundfile="clip%d.mp3"%self.blindlevel%len(gamesounds)+1
-      print("sounds/%s"%soundfile)
+        soundfile="clip%d.mp3"%((self.blindlevel%len(gamesounds))+1)
       notification=SoundLoader.load("sounds/%s"%soundfile)
       notification.play()
 
@@ -313,7 +314,7 @@ class MainView(StackLayout):
     content.add_widget(InfoLabel(text="BLINDS UP SOUND"))
 
     for sound in gamesounds:
-      content.add_widget(SelectorRow(selector=sound,group="sounds",text=sound))
+      content.add_widget(SelectorRow(selector=sound,group="sounds",text="♬ "+sound))
 
     content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds"))
     content.add_widget(SelectorRow(selector="shuffle",text="shuffle",group="sounds"))
@@ -331,8 +332,7 @@ class MainView(StackLayout):
     self.info.dismiss()
 
   def set_game_sound(self,button):
-    gamesound=self.gamesound
-    print(self.gamesound)
+    self.gamesound=gamesound
     self.info.dismiss()
 
 class Version:
