@@ -223,7 +223,7 @@ class MainView(StackLayout):
       elif self.gamesound=="shuffle":
         soundfile="clip%d.mp3"%random.randint(1,len(gamesounds))
       elif self.gamesound=="sequence":
-        soundfile="clip%d.mp3"%((self.blindlevel%len(gamesounds))+1)
+        soundfile="clip%d.mp3"%(((self.blindlevel-1)%len(gamesounds))+1)
       notification=SoundLoader.load("sounds/%s"%soundfile)
       notification.play()
 
