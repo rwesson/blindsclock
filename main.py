@@ -20,6 +20,7 @@ from kivy.uix.popup import Popup
 from kivy.uix.stacklayout import StackLayout
 from kivy.utils import platform
 from kivy.app import App
+from plyer import vibrator
 
 Builder.load_file("kv.kv")
 
@@ -27,6 +28,9 @@ Builder.load_file("kv.kv")
 
 if platform=="android":
   from kivy.core.audio import audio_android
+  from android.permissions import request_permissions, Permission
+  request_permissions([Permission.VIBRATE])
+
 else:
   Window.size=(400,780) # mobile gives 1080,2116
 
@@ -234,6 +238,10 @@ class MainView(StackLayout):
       if notification is not None: notification.stop()
       notification=SoundLoader.load("sounds/%s"%soundfile)
       notification.play()
+      try:
+        vibrator.pattern([0]+5*[0.2])
+      except Exception as e:
+        print(str(e))
 
   def start_blinds_timer(self):
     if self.ids.startstop.text=="start":

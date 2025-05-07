@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,chardet,idna,datetime,android
+requirements = python3,kivy,chardet,idna,datetime,android,plyer
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -93,7 +93,7 @@ icon.adaptive_foreground.filename = %(source.dir)s/graphics/icon.png
 icon.adaptive_background.filename = %(source.dir)s/graphics/bg.png
 
 # (list) Permissions
-android.permissions = WAKE_LOCK
+android.permissions = WAKE_LOCK,VIBRATE
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
