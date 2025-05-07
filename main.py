@@ -57,6 +57,7 @@ gamesounds=[
 ]
 gamesound=0
 notification=None
+shuffleorder=list(range(1,len(gamesounds)+1))
 
 def format_time(s,h=False):
   if h:
@@ -111,13 +112,16 @@ class SelectorCheckBox(CheckBox):
     elif self.group=="sounds":
       global gamesound,notification
       if self.active:
-        try:
+        if self.selector=="shuffle":
+          random.shuffle(shuffleorder)
+          gamesound=self.selector
+        elif self.selector=="sequence":
+          gamesound=self.selector
+        else:
           gamesound=gamesounds.index(self.selector)
           if notification is not None: notification.stop()
           notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
           notification.play()
-        except:
-          gamesound=self.selector
 
 class SelectorLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
@@ -226,7 +230,7 @@ class MainView(StackLayout):
       if isinstance(self.gamesound,int):
         soundfile="clip%d.mp3"%(self.gamesound+1)
       elif self.gamesound=="shuffle":
-        soundfile="clip%d.mp3"%random.randint(1,len(gamesounds))
+        soundfile="clip%d.mp3"%shuffleorder[(self.blindlevel-1)%len(gamesounds)]
       elif self.gamesound=="sequence":
         soundfile="clip%d.mp3"%(((self.blindlevel-1)%len(gamesounds))+1)
       if notification is not None: notification.stop()
