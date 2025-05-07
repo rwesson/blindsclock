@@ -153,6 +153,10 @@ class InfoLabel(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
+class Spacer(Label):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
@@ -285,13 +289,13 @@ class MainView(StackLayout):
       "Version":version.version["revno"],
       "Last modified":version.version["revdate"],
     }
-    content.add_widget(Label(size_hint=(1,0.05)))
+    content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="APP INFO"))
 
     for key,value in appinfo.items():
       content.add_widget(InfoLabel(text="   "+key+" "+value))
 
-    content.add_widget(Label(size_hint=(1,0.05)))
+    content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="GAME SPEED"))
 
     for speed in ["Slow","Standard","Fast","Very fast"]:
@@ -310,7 +314,7 @@ class MainView(StackLayout):
     confirmgamespeed.bind(on_press = self.set_game_speed)
     content.add_widget(confirmgamespeed)
 
-    content.add_widget(Label(size_hint=(1,0.05)))
+    content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="BLINDS UP SOUND"))
 
     for sound in gamesounds:
