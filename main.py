@@ -8,7 +8,6 @@ import os
 import random
 
 from kivy.clock import Clock
-from kivy.config import Config
 from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.metrics import sp
@@ -21,10 +20,8 @@ from kivy.uix.popup import Popup
 from kivy.uix.stacklayout import StackLayout
 from kivy.utils import platform
 from kivy.app import App
-from threading import Thread
 
 Builder.load_file("kv.kv")
-#Config.set('kivy', 'exit_on_escape', '0')
 
 # set up platform-specific things
 
