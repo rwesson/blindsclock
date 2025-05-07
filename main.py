@@ -172,8 +172,8 @@ class MainView(StackLayout):
 
 # set up blinds, display initial values
   def initialise(self,gamespeed="standard"):
-    print("setting up %s game..."%gamespeed)
-    print("game time approx. %d minutes"%sum(gamespeeds[gamespeed]))
+    print("[SETUP  ] setting up %s game..."%gamespeed)
+    print("[SETUP  ] game time approx. %d minutes"%sum(gamespeeds[gamespeed]))
     self.gamespeed=gamespeed
     self.gamesound=gamesound
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
