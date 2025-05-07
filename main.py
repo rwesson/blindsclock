@@ -320,11 +320,12 @@ class MainView(StackLayout):
     content.add_widget(InfoLabel(text="BLINDS UP SOUND"))
 
     for sound in gamesounds:
-      active=sound==gamesounds[self.gamesound]
+      if isinstance(self.gamesound,int):
+        active=sound==gamesounds[self.gamesound]
       content.add_widget(SelectorRow(selector=sound,group="sounds",text="♬ "+sound,active=active))
 
-    content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds"))
-    content.add_widget(SelectorRow(selector="shuffle",text="shuffle",group="sounds"))
+    content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds",active=self.gamesound=="sequence"))
+    content.add_widget(SelectorRow(selector="shuffle",text="shuffle",group="sounds",active=self.gamesound=="shuffle"))
 
     confirmgamesound = Button(text="set",size_hint=(1,0.05))
     confirmgamesound.bind(on_press = self.set_game_sound)
