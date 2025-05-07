@@ -114,10 +114,8 @@ class SelectorCheckBox(CheckBox):
         try:
           gamesound=gamesounds.index(self.selector)
           if notification is not None: notification.stop()
-          print("ok stopped")
           notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
           notification.play()
-          print("ok playing?")
         except:
           gamesound=self.selector
 
@@ -322,7 +320,8 @@ class MainView(StackLayout):
     content.add_widget(InfoLabel(text="BLINDS UP SOUND"))
 
     for sound in gamesounds:
-      content.add_widget(SelectorRow(selector=sound,group="sounds",text="♬ "+sound))
+      active=sound==gamesounds[self.gamesound]
+      content.add_widget(SelectorRow(selector=sound,group="sounds",text="♬ "+sound,active=active))
 
     content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds"))
     content.add_widget(SelectorRow(selector="shuffle",text="shuffle",group="sounds"))
