@@ -56,8 +56,7 @@ gamesounds=[
  "Go!"
 ]
 gamesound=0
-
-# notifications
+notification=None
 
 def format_time(s,h=False):
   if h:
@@ -110,12 +109,15 @@ class SelectorCheckBox(CheckBox):
       if self.active:
         gamespeed=self.selector
     elif self.group=="sounds":
-      global gamesound
+      global gamesound,notification
       if self.active:
         try:
           gamesound=gamesounds.index(self.selector)
+          if notification is not None: notification.stop()
+          print("ok stopped")
           notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
           notification.play()
+          print("ok playing?")
         except:
           gamesound=self.selector
 
@@ -198,6 +200,7 @@ class MainView(StackLayout):
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
   def update_display(self,interval):
+    global notification
     if not self.blindsrunning:
       return
 
@@ -228,6 +231,7 @@ class MainView(StackLayout):
         soundfile="clip%d.mp3"%random.randint(1,len(gamesounds))
       elif self.gamesound=="sequence":
         soundfile="clip%d.mp3"%(((self.blindlevel-1)%len(gamesounds))+1)
+      if notification is not None: notification.stop()
       notification=SoundLoader.load("sounds/%s"%soundfile)
       notification.play()
 
