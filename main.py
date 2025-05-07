@@ -55,9 +55,10 @@ gamesounds=[
  "Beethoven",
  "Go!"
 ]
-gamesound=0
+gamesound="shuffle"
 notification=None
 shuffleorder=list(range(1,len(gamesounds)+1))
+random.shuffle(shuffleorder)
 
 def format_time(s,h=False):
   if h:
