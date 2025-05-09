@@ -290,7 +290,7 @@ class MainView(StackLayout):
     self.display_blinds()
 
   def reset(self):
-    self.popup=ConfirmReset(size_hint=(0.8,0.2))
+    self.popup=ConfirmReset(size_hint=(0.8,0.15))
     self.popup.bind(on_dismiss=self.confirm_reset)
     self.popup.open()
 
