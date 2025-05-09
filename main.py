@@ -61,10 +61,19 @@ notification=None
 shuffleorder=list(range(1,len(gamesounds)+1))
 random.shuffle(shuffleorder)
 
+vibrate=True
+
 def format_time(s,h=False):
   if h:
     return "%02d : %02d : %02d"%(math.floor(s/3600),math.floor(s%3600/60),s%60)
   return "%02d : %02d"%(math.floor(s/60),s%60)
+
+def vibe():
+  if not vibrate: return
+  try:
+    vibrator.pattern([0]+5*[0.2])
+  except Exception as e:
+    print("[EXCEPT ] %s"%str(e))
 
 class ConfirmReset(Popup):
   def __init__(self,*args,**kwargs):
@@ -100,30 +109,31 @@ class BlindsDisplayRow(Label):
     super().__init__(**kwargs)
 
 class SelectorCheckBox(CheckBox):
-  group=StringProperty()
   selector=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
     self.bind(active=self.select_option)
 
   def select_option(self,button,state):
-    if self.group=="gamespeed":
+    if self.group=="gamespeed" and self.active:
       global gamespeed
-      if self.active:
-        gamespeed=self.selector
-    elif self.group=="sounds":
+      gamespeed=self.selector
+    elif self.group=="sounds" and self.active:
       global gamesound,notification
-      if self.active:
-        if self.selector=="shuffle":
-          random.shuffle(shuffleorder)
-          gamesound=self.selector
-        elif self.selector=="sequence":
-          gamesound=self.selector
-        else:
-          gamesound=gamesounds.index(self.selector)
-          if notification is not None: notification.stop()
-          notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
-          notification.play()
+      if self.selector=="shuffle":
+        random.shuffle(shuffleorder)
+        gamesound=self.selector
+      elif self.selector=="sequence":
+        gamesound=self.selector
+      else:
+        gamesound=gamesounds.index(self.selector)
+        if notification is not None: notification.stop()
+        notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
+        notification.play()
+    else:
+      global vibrate
+      vibrate=not vibrate
+      vibe()
 
 class SelectorLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
@@ -131,7 +141,10 @@ class SelectorLabel(ButtonBehavior,Label):
 
   def on_touch_down(self,touch):
     if self.collide_point(*touch.pos):
-      self.parent.children[1].active=True
+      if self.parent.children[1].group!=None:
+        self.parent.children[1].active=True
+      else:
+        self.parent.children[1].active=not self.parent.children[1].active
 
 class SelectorRow(StackLayout):
   active=BooleanProperty(False)
@@ -140,7 +153,10 @@ class SelectorRow(StackLayout):
   group=StringProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
-    checkbox=SelectorCheckBox(active=self.active,group=self.group,selector=self.selector)
+    if "group" in kwargs:
+      checkbox=SelectorCheckBox(active=self.active,group=self.group,selector=self.selector)
+    else:
+      checkbox=SelectorCheckBox(active=self.active,selector=self.selector)
     self.add_widget(checkbox)
     self.add_widget(SelectorLabel(text=" "+self.text))
 
@@ -176,6 +192,7 @@ class MainView(StackLayout):
     print("[SETUP  ] game time approx. %d minutes"%sum(gamespeeds[gamespeed]))
     self.gamespeed=gamespeed
     self.gamesound=gamesound
+    self.vibrate=vibrate
     self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
     self.intervals=[ 60*x for x in gamespeeds[self.gamespeed]]
     self.ids.startstop.text="start"
@@ -238,10 +255,7 @@ class MainView(StackLayout):
       if notification is not None: notification.stop()
       notification=SoundLoader.load("sounds/%s"%soundfile)
       notification.play()
-      try:
-        vibrator.pattern([0]+5*[0.2])
-      except Exception as e:
-        print(str(e))
+      vibe()
 
   def start_blinds_timer(self):
     if self.ids.startstop.text=="start":
@@ -336,6 +350,7 @@ class MainView(StackLayout):
 
     content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds",active=self.gamesound=="sequence"))
     content.add_widget(SelectorRow(selector="shuffle",text="shuffle",group="sounds",active=self.gamesound=="shuffle"))
+    content.add_widget(SelectorRow(selector="vibrate",text="vibrate",active=self.vibrate))
 
     confirmgamesound = Button(text="set",size_hint=(1,0.05))
     confirmgamesound.bind(on_press = self.set_game_sound)
