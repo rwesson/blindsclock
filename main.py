@@ -68,8 +68,8 @@ def format_time(s,h=False):
     return "%02d : %02d : %02d"%(math.floor(s/3600),math.floor(s%3600/60),s%60)
   return "%02d : %02d"%(math.floor(s/60),s%60)
 
-def vibe():
-  if not vibrate: return
+def vibe(vibratenow):
+  if not vibratenow: return
   try:
     vibrator.pattern([0]+5*[0.2])
   except Exception as e:
@@ -134,8 +134,8 @@ class SelectorCheckBox(CheckBox):
         notification.play()
     else:
       global vibrate
-      vibrate=not vibrate
-      vibe()
+      vibrate=self.active
+      vibe(vibrate)
 
 class SelectorLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
@@ -258,7 +258,7 @@ class MainView(StackLayout):
       if self.gamesound is not None:
         notification=SoundLoader.load("sounds/%s"%soundfile)
         notification.play()
-      vibe()
+      vibe(self.vibrate)
 
   def start_blinds_timer(self):
     if self.ids.startstop.text=="start":
@@ -370,6 +370,7 @@ class MainView(StackLayout):
 
   def set_game_sound(self,button):
     self.gamesound=gamesound
+    self.vibrate=vibrate
     self.info.dismiss()
 
 class Version:
