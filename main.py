@@ -125,6 +125,8 @@ class SelectorCheckBox(CheckBox):
         gamesound=self.selector
       elif self.selector=="sequence":
         gamesound=self.selector
+      elif self.selector=="none":
+        gamesound=None
       else:
         gamesound=gamesounds.index(self.selector)
         if notification is not None: notification.stop()
@@ -253,8 +255,9 @@ class MainView(StackLayout):
       elif self.gamesound=="sequence":
         soundfile="clip%d.mp3"%(((self.blindlevel-1)%len(gamesounds))+1)
       if notification is not None: notification.stop()
-      notification=SoundLoader.load("sounds/%s"%soundfile)
-      notification.play()
+      if self.gamesound is not None:
+        notification=SoundLoader.load("sounds/%s"%soundfile)
+        notification.play()
       vibe()
 
   def start_blinds_timer(self):
@@ -350,6 +353,7 @@ class MainView(StackLayout):
 
     content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds",active=self.gamesound=="sequence"))
     content.add_widget(SelectorRow(selector="shuffle",text="shuffle",group="sounds",active=self.gamesound=="shuffle"))
+    content.add_widget(SelectorRow(selector="none",text="none",group="sounds",active=self.gamesound=="none"))
     content.add_widget(SelectorRow(selector="vibrate",text="vibrate",active=self.vibrate))
 
     confirmgamesound = Button(text="set",size_hint=(1,0.05))
