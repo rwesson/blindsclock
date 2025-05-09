@@ -181,6 +181,10 @@ class Spacer(Label):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
 
+class SetButton(Button):
+  def __init__(self,*args,**kwargs):
+    super().__init__(**kwargs)
+
 class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
@@ -339,7 +343,7 @@ class MainView(StackLayout):
       active=speed.lower()==self.gamespeed
       content.add_widget(SelectorRow(selector=speed.lower(),group="gamespeed",text=labeltext,active=active))
 
-    confirmgamespeed = Button(text="set",size_hint=(1,0.05))
+    confirmgamespeed = SetButton()
     confirmgamespeed.bind(on_press = self.set_game_speed)
     content.add_widget(confirmgamespeed)
 
@@ -356,7 +360,7 @@ class MainView(StackLayout):
     content.add_widget(SelectorRow(selector="none",text="none",group="sounds",active=self.gamesound=="none"))
     content.add_widget(SelectorRow(selector="vibrate",text="vibrate",active=self.vibrate))
 
-    confirmgamesound = Button(text="set",size_hint=(1,0.05))
+    confirmgamesound = SetButton()
     confirmgamesound.bind(on_press = self.set_game_sound)
     content.add_widget(confirmgamesound)
 
