@@ -104,7 +104,8 @@
         size_hint: (1, 0.95)
 
 <BlindsDisplayRow@Label>:
-    size_hint: (1,0.05)
+    size: (app.width,dp(24))
+    size_hint: (None,None)
     text_size: self.size
     halign: "left"
     valign: "center"
@@ -120,7 +121,8 @@
             size: (self.width,self.height)
 
 <InfoLabel@Label>:
-    size_hint: (1,max(0.033,dp(24)/app.height))
+    size_hint: (None,None)
+    size: (app.width,dp(24))
     text_size: self.size
     halign: "left"
 
@@ -129,7 +131,8 @@
 
 <SelectorRow@StackLayout>:
     orientation: "lr-tb"
-    size_hint: (1,max(0.04,dp(32)/app.height))
+    size_hint: (None,None)
+    size: (app.width,dp(28))
 
 <SelectorLabel@Label>:
     halign: "left"
