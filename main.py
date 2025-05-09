@@ -269,14 +269,12 @@ class MainView(StackLayout):
       self.blindsrunning=True
       self.ids.startstop.text="pause"
       self.ids.gametime.color="white"
-      if self.ids.timeuntilnextblinds.color=="grey":
-        self.ids.timeuntilnextblinds.color="white"
+      self.ids.timeuntilnextblinds.color="red" if self.time<60 else "white"
     else:
       self.blindsrunning=False
       self.ids.startstop.text="resume"
       self.ids.gametime.color="grey"
-      if self.ids.timeuntilnextblinds.color=="white":
-        self.ids.timeuntilnextblinds.color="grey"
+      self.ids.timeuntilnextblinds.color="red" if self.time<60 else "grey"
 
   def blinds_control(self,opt):
     if opt=="prev":
