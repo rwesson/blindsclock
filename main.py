@@ -265,12 +265,12 @@ class MainView(StackLayout):
       vibe(self.vibrate)
 
   def start_blinds_timer(self):
-    if self.ids.startstop.text=="start":
+    if self.ids.startstop.text in ["start","resume"]:
       self.blindsrunning=True
-      self.ids.startstop.text="stop"
+      self.ids.startstop.text="pause"
     else:
       self.blindsrunning=False
-      self.ids.startstop.text="start"
+      self.ids.startstop.text="resume"
 
   def blinds_control(self,opt):
     if opt=="prev":
@@ -303,9 +303,10 @@ class MainView(StackLayout):
       self.gametime=0
       self.ids.gametime.text=format_time(self.gametime,True)
 # stop timers if they are running
-      if self.ids.startstop.text=="stop":
+      if self.ids.startstop.text=="pause":
         self.start_blinds_timer()
 # update display
+      self.ids.startstop.text="start"
       self.ids.timeuntilnextblinds.text=format_time(self.time)
       self.display_blinds()
     else:
