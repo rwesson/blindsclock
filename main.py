@@ -95,7 +95,6 @@ class BlindsStructure(Popup):
     self.title="Blinds structure"
 
   def load_blinds_display(self,blinds,intervals,currentlevel):
-    data=[]
     for i,b in enumerate(blinds):
       highlight=i==currentlevel
       altrow=i%2==0
