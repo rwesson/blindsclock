@@ -7,7 +7,7 @@ import math
 import os
 import random
 
-from android_notify import Notification
+from android_notify import Notification,NotificationStyles
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -63,6 +63,11 @@ shuffleorder=list(range(1,len(gamesounds)+1))
 random.shuffle(shuffleorder)
 
 vibrate=True
+
+# notifications
+
+notification = None
+nbnotification = None
 
 def format_time(s,h=False):
   if h:
@@ -227,14 +232,16 @@ class MainView(StackLayout):
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
   def update_display(self,interval):
-    global soundplayer
+    global soundplayer,notification,nbnotification
     if not self.blindsrunning:
       return
-
     if self.blindlevel+1<len(self.smallblinds):
       self.ids.timeuntilnextblinds.text=format_time(self.time)
       self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.current_interval))*self.ids.timeuntilnextblinds.width
       self.time-=1
+      notification.updateProgressBar(
+        self.time, format_time(self.time)
+      )
     else:
       self.ids.timeuntilnextblinds.text="-- : --"
       self.ids.timeuntilnextblinds.bgwidth=0
@@ -263,18 +270,30 @@ class MainView(StackLayout):
         soundplayer=SoundLoader.load("sounds/%s"%soundfile)
         soundplayer.play()
       vibe(self.vibrate)
-      notification = Notification(
+      nbnotification = Notification(
        title="Blinds are up!",
        message="New blinds: %d / %d"%(self.smallblinds[self.blindlevel],2*self.smallblinds[self.blindlevel])
       )
-      notification.send()
+      nbnotification.send()
+      Clock.schedule_once(nbnotification.cancel,10)
 
   def start_blinds_timer(self):
+    global notification
     if self.ids.startstop.text in ["start","resume"]:
       self.blindsrunning=True
       self.ids.startstop.text="pause"
       self.ids.gametime.color="white"
       self.ids.timeuntilnextblinds.color="red" if self.time<60 else "white"
+
+# start notification
+      notification = Notification(
+        title="Time until next blinds",
+        message=format_time(self.current_interval),
+        style=NotificationStyles.PROGRESS,
+        progress_current_value=self.current_interval,progress_max_value=0
+      )
+      notification.send()
+
     else:
       self.blindsrunning=False
       self.ids.startstop.text="resume"
