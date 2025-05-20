@@ -270,12 +270,16 @@ class MainView(StackLayout):
         soundplayer=SoundLoader.load("sounds/%s"%soundfile)
         soundplayer.play()
       vibe(self.vibrate)
-      nbnotification = Notification(
-       title="Blinds are up!",
-       message="New blinds: %d / %d"%(self.smallblinds[self.blindlevel],2*self.smallblinds[self.blindlevel])
-      )
+
+      nbmessage="Blinds are now %d / %d"%(self.smallblinds[self.blindlevel],2*self.smallblinds[self.blindlevel])
+      if nbnotification is None:
+        nbnotification = Notification(
+          title="Blinds are up!",
+          message=nbmessage
+        )
+      else:
+        nbnotification.updateMessage(nbmessage)
       nbnotification.send()
-      Clock.schedule_once(nbnotification.cancel,10)
 
   def start_blinds_timer(self):
     global notification
