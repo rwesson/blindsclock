@@ -280,6 +280,7 @@ class MainView(StackLayout):
       else:
         nbnotification.updateMessage(nbmessage)
       nbnotification.send()
+      Clock.schedule_once(nbnotification.cancel,10)
 
   def start_blinds_timer(self):
     global notification
