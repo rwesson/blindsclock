@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,chardet,idna,datetime,android,plyer
+requirements = python3,kivy,chardet,idna,datetime,android,plyer,android-notify
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -93,13 +93,13 @@ icon.adaptive_foreground.filename = %(source.dir)s/graphics/icon.png
 icon.adaptive_background.filename = %(source.dir)s/graphics/bg.png
 
 # (list) Permissions
-android.permissions = WAKE_LOCK,VIBRATE
+android.permissions = WAKE_LOCK,VIBRATE,POST_NOTIFICATIONS
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
 
 # (int) Target Android API, should be as high as possible.
-#android.api = 27
+android.api = 35
 
 # (int) Minimum API your APK / AAB will support.
 #android.minapi = 21
@@ -187,12 +187,12 @@ android.permissions = WAKE_LOCK,VIBRATE
 #android.add_assets =
 
 # (list) Gradle dependencies to add
-#android.gradle_dependencies =
+android.gradle_dependencies = androidx.core:core:1.6.0, androidx.core:core-ktx:1.15.0
 
 # (bool) Enable AndroidX support. Enable when 'android.gradle_dependencies'
 # contains an 'androidx' package, or any package from Kotlin source.
 # android.enable_androidx requires android.api >= 28
-#android.enable_androidx = False
+android.enable_androidx = True
 
 # (list) add java compile options
 # this can for example be necessary when importing certain java libraries using the 'android.gradle_dependencies' option

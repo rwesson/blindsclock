@@ -7,6 +7,7 @@ import math
 import os
 import random
 
+from android_notify import Notification
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
@@ -57,7 +58,7 @@ gamesounds=[
  "Go!"
 ]
 gamesound="shuffle"
-notification=None
+soundplayer=None
 shuffleorder=list(range(1,len(gamesounds)+1))
 random.shuffle(shuffleorder)
 
@@ -118,7 +119,7 @@ class SelectorCheckBox(CheckBox):
       global gamespeed
       gamespeed=self.selector
     elif self.group=="sounds" and self.active:
-      global gamesound,notification
+      global gamesound,soundplayer
       if self.selector=="shuffle":
         random.shuffle(shuffleorder)
         gamesound=self.selector
@@ -128,9 +129,9 @@ class SelectorCheckBox(CheckBox):
         gamesound=None
       else:
         gamesound=gamesounds.index(self.selector)
-        if notification is not None: notification.stop()
-        notification=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
-        notification.play()
+        if soundplayer is not None: soundplayer.stop()
+        soundplayer=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
+        soundplayer.play()
     else:
       global vibrate
       vibrate=self.active
@@ -226,7 +227,7 @@ class MainView(StackLayout):
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
   def update_display(self,interval):
-    global notification
+    global soundplayer
     if not self.blindsrunning:
       return
 
@@ -257,11 +258,16 @@ class MainView(StackLayout):
         soundfile="clip%d.mp3"%shuffleorder[(self.blindlevel-1)%len(gamesounds)]
       elif self.gamesound=="sequence":
         soundfile="clip%d.mp3"%(((self.blindlevel-1)%len(gamesounds))+1)
-      if notification is not None: notification.stop()
+      if soundplayer is not None: soundplayer.stop()
       if self.gamesound is not None:
-        notification=SoundLoader.load("sounds/%s"%soundfile)
-        notification.play()
+        soundplayer=SoundLoader.load("sounds/%s"%soundfile)
+        soundplayer.play()
       vibe(self.vibrate)
+      notification = Notification(
+       title="Blinds are up!",
+       message="New blinds: %d / %d"%(self.smallblinds[self.blindlevel],2*self.smallblinds[self.blindlevel])
+      )
+      notification.send()
 
   def start_blinds_timer(self):
     if self.ids.startstop.text in ["start","resume"]:
