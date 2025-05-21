@@ -343,6 +343,10 @@ class MainView(StackLayout):
       self.ids.startstop.text="start"
       self.ids.timeuntilnextblinds.text=format_time(self.time)
       self.display_blinds()
+# update notification
+      notification.updateProgressBar(
+        (self.current_interval-self.time), format_time(self.time)
+      )
     else:
       pass
 
