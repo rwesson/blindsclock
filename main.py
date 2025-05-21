@@ -291,13 +291,18 @@ class MainView(StackLayout):
       self.ids.timeuntilnextblinds.color="red" if self.time<60 else "white"
 
 # start notification
-      notification = Notification(
-        title="Time until next blinds",
-        message=format_time(self.current_interval),
-        style=NotificationStyles.PROGRESS,
-        progress_current_value=0,
-        progress_max_value=self.current_interval
-      )
+      if notification is None:
+        notification = Notification(
+          title="Time until next blinds",
+          message=format_time(self.current_interval),
+          style=NotificationStyles.PROGRESS,
+          progress_current_value=0,
+          progress_max_value=self.current_interval
+        )
+      else:
+        notification.updateProgressBar(
+          (self.current_interval-self.time), format_time(self.time)
+        )
       notification.send()
 
     else:
