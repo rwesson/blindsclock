@@ -240,7 +240,8 @@ class MainView(StackLayout):
       self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.current_interval))*self.ids.timeuntilnextblinds.width
       self.time-=1
       notification.updateProgressBar(
-        (self.current_interval-self.time), format_time(self.time)
+        current_value=(self.current_interval-self.time),
+        title=format_time(self.time)+" until next blinds"
       )
     else:
       self.ids.timeuntilnextblinds.text="-- : --"
@@ -293,15 +294,15 @@ class MainView(StackLayout):
 # start notification
       if notification is None:
         notification = Notification(
-          title="Time until next blinds",
-          message=format_time(self.current_interval),
+          title=format_time(self.current_interval)+" until next blinds",
           style=NotificationStyles.PROGRESS,
           progress_current_value=0,
           progress_max_value=self.current_interval
         )
       else:
         notification.updateProgressBar(
-          (self.current_interval-self.time), format_time(self.time)
+          current_value=(self.current_interval-self.time),
+          title=format_time(self.current_interval)+" until next blinds"
         )
       notification.send()
 
@@ -350,7 +351,8 @@ class MainView(StackLayout):
       self.display_blinds()
 # update notification
       notification.updateProgressBar(
-        (self.current_interval-self.time), format_time(self.time)
+        current_value=(self.current_interval-self.time),
+        title=format_time(self.time)+" until next blinds"
       )
     else:
       pass
