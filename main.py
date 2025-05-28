@@ -32,8 +32,6 @@ Builder.load_file("kv.kv")
 
 if platform=="android":
   from kivy.core.audio import audio_android
-  from android.permissions import request_permissions, Permission
-  request_permissions([Permission.VIBRATE])
 
 else:
   Window.size=(400,780) # mobile gives 1080,2116
