@@ -1,6 +1,6 @@
 from random import sample, randint
 from string import ascii_letters
-from time import localtime, asctime, sleep
+from time import sleep
 
 from oscpy.server import OSCThreadServer
 from oscpy.client import OSCClient
@@ -9,7 +9,7 @@ CLIENT = OSCClient('0.0.0.0', 3002)
 
 
 def ping(*_):
-    'answer to ping messages'
+    print("ping")
     CLIENT.send_message(
         b'/message',
         [
@@ -19,11 +19,11 @@ def ping(*_):
     )
 
 
-def send_date():
-    'send date to the application'
+def call_update():
+    print("sending update trigger")
     CLIENT.send_message(
         b'/date',
-        [asctime(localtime()).encode('utf8'), ],
+        [b"update"],
     )
 
 
@@ -33,4 +33,4 @@ if __name__ == '__main__':
     SERVER.bind(b'/ping', ping)
     while True:
         sleep(1)
-        send_date()
+        call_update()

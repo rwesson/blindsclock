@@ -72,29 +72,6 @@ vibrate=True
 notification = None
 nbnotification = None
 
-def print_msg(par):
-  print(par)
-  notification=Notification(title="yeah we notifying")
-  notification.send()
-
-# more android stuff
-
-if platform=="android":
-  from android import mActivity
-  from jnius import autoclass
-
-  service = autoclass('org.rwblinds.ServiceRunner')
-  service.start(mActivity,"")
-
-  server = OSCThreadServer()
-  server.listen(
-      address=b'0.0.0.0',
-      port=3002,
-      default=True,
-  )
-
-  server.bind(b'/date', print_msg)
-
 def format_time(s,h=False):
   if h:
     return "%02d : %02d : %02d"%(math.floor(s/3600),math.floor(s%3600/60),s%60)
@@ -221,7 +198,26 @@ class MainView(StackLayout):
     super().__init__(**kwargs)
     current_interval=NumericProperty()
     self.initialise("standard")
-    Clock.schedule_interval(self.update_display,1)
+
+# set up service if on android. use kivy clock otherwise
+
+    if platform=="android":
+      from android import mActivity
+      from jnius import autoclass
+
+      service = autoclass('org.rwblinds.ServiceRunner')
+      service.start(mActivity,"")
+
+      server = OSCThreadServer()
+      server.listen(
+          address=b'0.0.0.0',
+          port=3002,
+          default=True,
+      )
+
+      server.bind(b'/date', self.update_display)
+    else:
+      Clock.schedule_interval(self.update_display,1)
 
 # set up blinds, display initial values
   def initialise(self,gamespeed="standard"):
