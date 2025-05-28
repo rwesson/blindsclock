@@ -23,6 +23,9 @@ from kivy.utils import platform
 from kivy.app import App
 from plyer import vibrator
 
+from oscpy.client import OSCClient
+from oscpy.server import OSCThreadServer
+
 Builder.load_file("kv.kv")
 
 # set up platform-specific things
@@ -31,13 +34,6 @@ if platform=="android":
   from kivy.core.audio import audio_android
   from android.permissions import request_permissions, Permission
   request_permissions([Permission.VIBRATE])
-
-  from android import mActivity
-  from jnius import autoclass
-
-  print(mActivity.getApplicationContext().getPackageName())
-  service = autoclass('org.rwblinds.ServiceRunner')
-  service.start(mActivity,"")
 
 else:
   Window.size=(400,780) # mobile gives 1080,2116
@@ -75,6 +71,29 @@ vibrate=True
 
 notification = None
 nbnotification = None
+
+def print_msg(par):
+  print(par)
+  notification=Notification(title="yeah we notifying")
+  notification.send()
+
+# more android stuff
+
+if platform=="android":
+  from android import mActivity
+  from jnius import autoclass
+
+  service = autoclass('org.rwblinds.ServiceRunner')
+  service.start(mActivity,"")
+
+  server = OSCThreadServer()
+  server.listen(
+      address=b'0.0.0.0',
+      port=3002,
+      default=True,
+  )
+
+  server.bind(b'/date', print_msg)
 
 def format_time(s,h=False):
   if h:

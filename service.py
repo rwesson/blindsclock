@@ -1,14 +1,12 @@
-#!/usr/bin/python
+from random import sample, randint
+from string import ascii_letters
+from time import localtime, asctime, sleep
 
-# test file to run service that doesn't yet interact at all with the main program
-
-import threading
-import time
-
-from oscpy.client import OSCClient
 from oscpy.server import OSCThreadServer
+from oscpy.client import OSCClient
 
-CLIENT = OSCClient('localhost', 3002)
+CLIENT = OSCClient('0.0.0.0', 3002)
+
 
 def ping(*_):
     'answer to ping messages'
@@ -20,12 +18,6 @@ def ping(*_):
         ],
     )
 
-def timer():
-    global msg
-    while True:
-        print("yeah we notifying %d"%msg)
-        msg+=1
-        time.sleep(3)
 
 def send_date():
     'send date to the application'
@@ -37,8 +29,8 @@ def send_date():
 
 if __name__ == '__main__':
     SERVER = OSCThreadServer()
-    SERVER.listen('localhost', port=3000, default=True)
+    SERVER.listen('0.0.0.0', port=3000, default=True)
     SERVER.bind(b'/ping', ping)
     while True:
-        time.sleep(1)
+        sleep(1)
         send_date()
