@@ -32,6 +32,13 @@ if platform=="android":
   from android.permissions import request_permissions, Permission
   request_permissions([Permission.VIBRATE])
 
+  from android import mActivity
+  from jnius import autoclass
+
+  print(mActivity.getApplicationContext().getPackageName())
+  service = autoclass('org.rwblinds.ServiceRunner')
+  service.start(mActivity,"")
+
 else:
   Window.size=(400,780) # mobile gives 1080,2116
 

@@ -53,7 +53,7 @@ icon.filename = %(source.dir)s/graphics/icon.png
 orientation = portrait, landscape, portrait-reverse, landscape-reverse
 
 # (list) List of service to declare
-#services = NAME:ENTRYPOINT_TO_PY,NAME2:ENTRYPOINT2_TO_PY
+services = Runner:service.py
 
 #
 # OSX Specific
