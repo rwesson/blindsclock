@@ -252,6 +252,7 @@ class MainView(StackLayout):
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
   def update_display(self,interval):
+    print("received call to update")
     global soundplayer,notification,nbnotification
     if not self.blindsrunning:
       return
