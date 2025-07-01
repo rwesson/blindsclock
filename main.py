@@ -34,7 +34,7 @@ if platform=="android":
   from kivy.core.audio import audio_android
 
 else:
-  Window.size=(400,780) # mobile gives 1080,2116
+  Window.size=(400,780) # mobile gives 1080,2116 (now 2340)
 
 from kivy.core.audio import SoundLoader
 
