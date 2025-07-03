@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import datetime
-import glob
 import json
 import math
 import os
