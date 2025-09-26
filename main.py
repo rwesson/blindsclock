@@ -369,11 +369,12 @@ class MainView(StackLayout):
       self.ids.startstop.text="start"
       self.ids.timeuntilnextblinds.text=format_time(self.time)
       self.display_blinds()
-# update notification
-      notification.updateProgressBar(
-        current_value=(self.current_interval-self.time),
-        title=format_time(self.time)+" until next blinds"
-      )
+# update notification if it has been created
+      if notification is not None:
+        notification.updateProgressBar(
+          current_value=(self.current_interval-self.time),
+          title=format_time(self.time)+" until next blinds"
+        )
     else:
       pass
 
