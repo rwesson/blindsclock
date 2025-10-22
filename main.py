@@ -94,7 +94,7 @@ class SelectorCheckBox(CheckBox):
     elif self.group=="sounds" and self.active:
 #      global gamesound,soundplayer
       if self.selector=="shuffle":
-        random.shuffle(shuffleorder)
+        random.shuffle(root.shuffleorder)
         root.gamesound=self.selector
       elif self.selector=="sequence":
         root.gamesound=self.selector
@@ -107,8 +107,8 @@ class SelectorCheckBox(CheckBox):
         root.soundplayer.play()
     else:
       print(root.vibrate)
-      root.vibrate=self.active
-      vibe(root.vibrate)
+      root.newvibrate=self.active
+      vibe(root.newvibrate)
 
 class SelectorLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
@@ -446,7 +446,7 @@ class MainView(StackLayout):
 
   def set_game_sound(self,button):
     self.gamesound=self.newgamesound
-#    self.vibrate=vibrate
+    self.vibrate=self.newvibrate
     self.info.dismiss()
 
 class Version:
