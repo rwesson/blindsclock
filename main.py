@@ -83,6 +83,7 @@ class BlindsDisplayRow(Label):
 
 class SelectorCheckBox(CheckBox):
   selector=StringProperty()
+  vibeset=BooleanProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
     self.bind(active=self.select_option)
@@ -105,8 +106,7 @@ class SelectorCheckBox(CheckBox):
         if root.soundplayer is not None: root.soundplayer.stop()
         root.soundplayer=SoundLoader.load("sounds/clip%d.mp3"%(root.gamesound+1))
         root.soundplayer.play()
-    else:
-      print(root.vibrate)
+    elif self.vibeset:
       root.newvibrate=self.active
       vibe(root.newvibrate)
 
@@ -131,7 +131,7 @@ class SelectorRow(StackLayout):
     if "group" in kwargs:
       checkbox=SelectorCheckBox(active=self.active,group=self.group,selector=self.selector)
     else:
-      checkbox=SelectorCheckBox(active=self.active,selector=self.selector)
+      checkbox=SelectorCheckBox(active=self.active,selector=self.selector,vibeset=True)
 
     self.add_widget(checkbox)
     self.add_widget(SelectorLabel(text=" "+self.text))
@@ -214,6 +214,7 @@ class MainView(StackLayout):
     random.shuffle(self.shuffleorder)
 
     self.vibrate=True
+    self.newvibrate=None
 
 # notifications
 
@@ -445,8 +446,10 @@ class MainView(StackLayout):
     self.info.dismiss()
 
   def set_game_sound(self,button):
-    self.gamesound=self.newgamesound
-    self.vibrate=self.newvibrate
+    if self.newgamesound is not None:
+      self.gamesound=self.newgamesound
+    if self.newvibrate is not None:
+      self.vibrate=self.newvibrate
     self.info.dismiss()
 
 class Version:
