@@ -394,6 +394,7 @@ class MainView(StackLayout):
     appinfo={
       "Version":version.version["revno"],
       "Last modified":version.version["revdate"],
+      "Running on":platform
     }
     content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="APP INFO"))
