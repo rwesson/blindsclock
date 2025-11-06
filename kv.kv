@@ -1,6 +1,9 @@
 <Widget>:
     font_name: "DejaVuSans"
 
+<Popup>:
+    size_hint: (1,0.94)
+
 <TextField@ButtonBehavior+Label>:
     size_hint: (1.0,0.08)
     canvas:
@@ -14,7 +17,7 @@
     size_hint: (1.0,0.11)
 
 <Controls@Button>:
-    size_hint: (0.22,1)
+    size_hint: (0.19,1)
     background_color: 1,1,1,0.35
 
 <Help@Button>:
@@ -83,6 +86,9 @@
         Controls:
             text: "reset"
             on_release: root.reset()
+        Help:
+            text: "£"
+            on_release: root.show_prizes()
         Help:
             text: "⚙"
             on_release: root.show_info()

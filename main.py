@@ -22,9 +22,6 @@ from kivy.utils import platform
 from kivy.app import App
 from plyer import vibrator
 
-from oscpy.client import OSCClient
-from oscpy.server import OSCThreadServer
-
 Builder.load_file("kv.kv")
 
 # set up platform-specific things
@@ -36,6 +33,38 @@ else:
   Window.size=(400,780) # mobile gives 1080,2116 (now 2340)
 
 from kivy.core.audio import SoundLoader
+
+# game speeds
+gamespeeds={
+ "slow":      [ 20,20,20,20,20,20,20,20,20,20,20,20,20,20,20 ],
+ "standard":  [ 20,20,20,15,15,15,10,10,10,10,10,10,10,10,10 ],
+ "fast":      [ 10,10,10,7.5,7.5,7.5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ],
+ "very fast": [  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ]
+}
+gamespeed="standard"
+
+# notification sounds
+gamesounds=[
+ "Tune Down",
+ "S.W.A.T.",
+ "Battle",
+ "Insomnia",
+ "Get Lucky",
+ "Grandstand",
+ "Beethoven",
+ "Go!"
+]
+gamesound="shuffle"
+soundplayer=None
+shuffleorder=list(range(1,len(gamesounds)+1))
+random.shuffle(shuffleorder)
+
+vibrate=True
+
+# notifications
+
+notification = None
+nbnotification = None
 
 def format_time(s,h=False):
   if h:
@@ -83,32 +112,32 @@ class BlindsDisplayRow(Label):
 
 class SelectorCheckBox(CheckBox):
   selector=StringProperty()
-  vibeset=BooleanProperty()
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
     self.bind(active=self.select_option)
 
   def select_option(self,button,state):
-    root=App.get_running_app().root
     if self.group=="gamespeed" and self.active:
-      root.newgamespeed=self.selector
+      global gamespeed
+      gamespeed=self.selector
     elif self.group=="sounds" and self.active:
-#      global gamesound,soundplayer
+      global gamesound,soundplayer
       if self.selector=="shuffle":
-        random.shuffle(root.shuffleorder)
-        root.gamesound=self.selector
+        random.shuffle(shuffleorder)
+        gamesound=self.selector
       elif self.selector=="sequence":
-        root.gamesound=self.selector
+        gamesound=self.selector
       elif self.selector=="none":
-        root.gamesound=None
+        gamesound=None
       else:
-        root.gamesound=root.gamesounds.index(self.selector)
-        if root.soundplayer is not None: root.soundplayer.stop()
-        root.soundplayer=SoundLoader.load("sounds/clip%d.mp3"%(root.gamesound+1))
-        root.soundplayer.play()
-    elif self.vibeset:
-      root.newvibrate=self.active
-      vibe(root.newvibrate)
+        gamesound=gamesounds.index(self.selector)
+        if soundplayer is not None: soundplayer.stop()
+        soundplayer=SoundLoader.load("sounds/clip%d.mp3"%(gamesound+1))
+        soundplayer.play()
+    else:
+      global vibrate
+      vibrate=self.active
+      vibe(vibrate)
 
 class SelectorLabel(ButtonBehavior,Label):
   def __init__(self,*args,**kwargs):
@@ -131,8 +160,7 @@ class SelectorRow(StackLayout):
     if "group" in kwargs:
       checkbox=SelectorCheckBox(active=self.active,group=self.group,selector=self.selector)
     else:
-      checkbox=SelectorCheckBox(active=self.active,selector=self.selector,vibeset=True)
-
+      checkbox=SelectorCheckBox(active=self.active,selector=self.selector)
     self.add_widget(checkbox)
     self.add_widget(SelectorLabel(text=" "+self.text))
 
@@ -163,74 +191,21 @@ class MainView(StackLayout):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
     current_interval=NumericProperty()
-
-# set up service if on android. use kivy clock otherwise
-
-    if platform=="android":
-      from android import mActivity
-      from jnius import autoclass
-
-      service = autoclass('org.rwblinds.ServiceRunner')
-      service.start(mActivity,"")
-
-      server = OSCThreadServer()
-      server.listen(
-          address=b'0.0.0.0',
-          port=3002,
-          default=True,
-      )
-
-      server.bind(b'/date', self.update_display)
-    else:
-      Clock.schedule_interval(self.update_display,1)
-
-# set up variables
-# blinds and speeds
-    self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
-    self.gamespeeds={
- "slow":      [ 20,20,20,20,20,20,20,20,20,20,20,20,20,20,20 ],
- "standard":  [ 20,20,20,15,15,15,10,10,10,10,10,10,10,10,10 ],
- "fast":      [ 10,10,10,7.5,7.5,7.5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ],
- "very fast": [  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ]
-}
-    self.gamespeed="standard"
-    self.newgamespeed=None
-
-# notification sounds
-    self.gamesounds=[
- "Tune Down",
- "S.W.A.T.",
- "Battle",
- "Insomnia",
- "Get Lucky",
- "Grandstand",
- "Beethoven",
- "Go!"
-]
-    self.gamesound="shuffle"
-    self.newgamesound=None
-    self.soundplayer=None
-    self.shuffleorder=list(range(1,len(self.gamesounds)+1))
-    random.shuffle(self.shuffleorder)
-
-    self.vibrate=True
-    self.newvibrate=None
-
-# notifications
-
-    self.notification = None
-    self.nbnotification = None
-
-# initialise
-
     self.initialise("standard")
+
+# start running
+
+    Clock.schedule_interval(self.update_display,1)
 
 # set up blinds, display initial values
   def initialise(self,gamespeed="standard"):
-    self.gamespeed=gamespeed
     print("[SETUP  ] setting up %s game..."%gamespeed)
-    print("[SETUP  ] game time approx. %d minutes"%sum(self.gamespeeds[self.gamespeed]))
-    self.intervals=[ 60*x for x in self.gamespeeds[self.gamespeed]]
+    print("[SETUP  ] game time approx. %d minutes"%sum(gamespeeds[gamespeed]))
+    self.gamespeed=gamespeed
+    self.gamesound=gamesound
+    self.vibrate=vibrate
+    self.smallblinds=[ 25,50,100,200,300,400,500,600,800,1000,2000,3000,4000,5000,6000 ]
+    self.intervals=[ 60*x for x in gamespeeds[self.gamespeed]]
     self.ids.startstop.text="start"
     self.ids.timeuntilnextblinds.bgwidth=0
 
@@ -257,15 +232,14 @@ class MainView(StackLayout):
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
   def update_display(self,interval):
-#    print("received call to update")
-#    global soundplayer,notification,nbnotification
+    global soundplayer,notification,nbnotification
     if not self.blindsrunning:
       return
     if self.blindlevel+1<len(self.smallblinds):
       self.ids.timeuntilnextblinds.text=format_time(self.time)
       self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.current_interval))*self.ids.timeuntilnextblinds.width
       self.time-=1
-      self.notification.updateProgressBar(
+      notification.updateProgressBar(
         current_value=(self.current_interval-self.time),
         title=format_time(self.time)+" until next blinds"
       )
@@ -289,25 +263,25 @@ class MainView(StackLayout):
       if isinstance(self.gamesound,int):
         soundfile="clip%d.mp3"%(self.gamesound+1)
       elif self.gamesound=="shuffle":
-        soundfile="clip%d.mp3"%self.shuffleorder[(self.blindlevel-1)%len(self.gamesounds)]
+        soundfile="clip%d.mp3"%shuffleorder[(self.blindlevel-1)%len(gamesounds)]
       elif self.gamesound=="sequence":
-        soundfile="clip%d.mp3"%(((self.blindlevel-1)%len(self.gamesounds))+1)
-      if self.soundplayer is not None: self.soundplayer.stop()
+        soundfile="clip%d.mp3"%(((self.blindlevel-1)%len(gamesounds))+1)
+      if soundplayer is not None: soundplayer.stop()
       if self.gamesound is not None:
-        self.soundplayer=SoundLoader.load("sounds/%s"%soundfile)
-        self.soundplayer.play()
+        soundplayer=SoundLoader.load("sounds/%s"%soundfile)
+        soundplayer.play()
       vibe(self.vibrate)
 
       nbmessage="Blinds are now %d / %d"%(self.smallblinds[self.blindlevel],2*self.smallblinds[self.blindlevel])
-      if self.nbnotification is None:
-        self.nbnotification = Notification(
+      if nbnotification is None:
+        nbnotification = Notification(
           title="Blinds are up!",
           message=nbmessage
         )
       else:
-        self.nbnotification.updateMessage(nbmessage)
-      self.nbnotification.send()
-      Clock.schedule_once(self.nbnotification.cancel,10)
+        nbnotification.updateMessage(nbmessage)
+      nbnotification.send()
+      Clock.schedule_once(nbnotification.cancel,10)
 
   def start_blinds_timer(self):
     global notification
@@ -318,19 +292,19 @@ class MainView(StackLayout):
       self.ids.timeuntilnextblinds.color="red" if self.time<60 else "white"
 
 # start notification
-      if self.notification is None:
-        self.notification = Notification(
+      if notification is None:
+        notification = Notification(
           title=format_time(self.current_interval)+" until next blinds",
           style=NotificationStyles.PROGRESS,
           progress_current_value=0,
           progress_max_value=self.current_interval
         )
       else:
-        self.notification.updateProgressBar(
+        notification.updateProgressBar(
           current_value=(self.current_interval-self.time),
           title=format_time(self.current_interval)+" until next blinds"
         )
-      self.notification.send()
+      notification.send()
 
     else:
       self.blindsrunning=False
@@ -389,12 +363,22 @@ class MainView(StackLayout):
     self.popup.load_blinds_display(self.smallblinds,self.intervals,self.blindlevel)
     self.popup.open()
 
+  def show_prizes(self):
+    content=StackLayout(orientation="tb-lr")
+    content.add_widget(Spacer())
+    content.add_widget(InfoLabel(text="players      3rd   2nd   1st"))
+    content.add_widget(InfoLabel(text="15+          15    25    the rest"))
+    content.add_widget(InfoLabel(text="10+          10    15    the rest"))
+    content.add_widget(InfoLabel(text="6+            5    10    the rest"))
+    content.add_widget(InfoLabel(text="up to 6       0     5    the rest"))
+    self.info=Popup(title="Prizes!",content=content)
+    self.info.open()
+
   def show_info(self):
     content=StackLayout(orientation="tb-lr")
     appinfo={
       "Version":version.version["revno"],
       "Last modified":version.version["revdate"],
-      "Running on":platform
     }
     content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="APP INFO"))
@@ -406,11 +390,11 @@ class MainView(StackLayout):
     content.add_widget(InfoLabel(text="GAME SPEED"))
 
     for speed in ["Slow","Standard","Fast","Very fast"]:
-      approxtime = round(2*sum([ x for x in self.gamespeeds[speed.lower()] ])/60)
+      approxtime = round(2*sum([ x for x in gamespeeds[speed.lower()] ])/60)
       hourstring = "hr" if approxtime==2 else "hrs"
       timefmt = "%d" if approxtime%2==0 else "%3.1f"
 
-      intervals = sorted(list(set(self.gamespeeds[speed.lower()])),reverse=True)
+      intervals = sorted(list(set(gamespeeds[speed.lower()])),reverse=True)
       intervalstext = " / ".join([str(x) for x in intervals] )
       timestring = "%s ("+intervalstext+" mins, ~ "+timefmt+" "+hourstring+" total)"
       labeltext = timestring%(speed,0.5*approxtime)
@@ -424,9 +408,9 @@ class MainView(StackLayout):
     content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="BLINDS UP SOUND"))
 
-    for sound in self.gamesounds:
+    for sound in gamesounds:
       if isinstance(self.gamesound,int):
-        active=sound==self.gamesounds[self.gamesound]
+        active=sound==gamesounds[self.gamesound]
       content.add_widget(SelectorRow(selector=sound,group="sounds",text="♬ "+sound,active=active))
 
     content.add_widget(SelectorRow(selector="sequence",text="sequence",group="sounds",active=self.gamesound=="sequence"))
@@ -442,15 +426,13 @@ class MainView(StackLayout):
     self.info.open()
 
   def set_game_speed(self,button):
-    if self.newgamespeed!=self.gamespeed:
-      self.initialise(self.newgamespeed)
+    if gamespeed!=self.gamespeed:
+      self.initialise(gamespeed)
     self.info.dismiss()
 
   def set_game_sound(self,button):
-    if self.newgamesound is not None:
-      self.gamesound=self.newgamesound
-    if self.newvibrate is not None:
-      self.vibrate=self.newvibrate
+    self.gamesound=gamesound
+    self.vibrate=vibrate
     self.info.dismiss()
 
 class Version:
@@ -469,7 +451,6 @@ class BlindsTimer(App):
   def build(self):
     self.width = Window.width
     self.height = Window.height
-
     return MainView()
 
 if __name__ == '__main__':

@@ -37,7 +37,7 @@ version = 1.0
 
 # (list) Application requirements
 # comma separated e.g. requirements = sqlite3,kivy
-requirements = python3,kivy,chardet,idna,datetime,android,plyer,android-notify,oscpy
+requirements = python3,kivy,chardet,idna,datetime,android,plyer,android-notify
 
 # (str) Custom source folders for requirements
 # Sets custom source for any requirements with recipes
@@ -53,7 +53,7 @@ icon.filename = %(source.dir)s/graphics/icon.png
 orientation = portrait, landscape, portrait-reverse, landscape-reverse
 
 # (list) List of service to declare
-services = Runner:service.py:foreground
+#services = Runner:service.py:foreground
 
 #
 # OSX Specific
@@ -93,7 +93,7 @@ icon.adaptive_foreground.filename = %(source.dir)s/graphics/icon.png
 icon.adaptive_background.filename = %(source.dir)s/graphics/bg.png
 
 # (list) Permissions
-android.permissions = WAKE_LOCK,VIBRATE,POST_NOTIFICATIONS,INTERNET,FOREGROUND_SERVICE
+android.permissions = WAKE_LOCK,VIBRATE,POST_NOTIFICATIONS
 
 # (list) features (adds uses-feature -tags to manifest)
 #android.features = android.hardware.usb.host
@@ -145,7 +145,7 @@ android.api = 35
 
 # (str) Extra xml to write directly inside the <manifest> element of AndroidManifest.xml
 # use that parameter to provide a filename from where to load your custom XML code
-android.extra_manifest_xml = ./extra-manifest.xml
+#android.extra_manifest_xml = ./extra-manifest.xml
 
 # (str) Extra xml to write directly inside the <manifest><application> tag of AndroidManifest.xml
 # use that parameter to provide a filename from where to load your custom XML arguments:
