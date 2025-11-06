@@ -64,7 +64,6 @@ vibrate=True
 # notifications
 
 notification = None
-nbnotification = None
 
 def format_time(s,h=False):
   if h:
@@ -232,17 +231,25 @@ class MainView(StackLayout):
       self.ids.nextblinds.text="NO MORE BLIND RAISES"
 
   def update_display(self,interval):
-    global soundplayer,notification,nbnotification
+    global soundplayer,notification
     if not self.blindsrunning:
       return
     if self.blindlevel+1<len(self.smallblinds):
       self.ids.timeuntilnextblinds.text=format_time(self.time)
       self.ids.timeuntilnextblinds.bgwidth=(1-(self.time/self.current_interval))*self.ids.timeuntilnextblinds.width
       self.time-=1
-      notification.updateProgressBar(
-        current_value=(self.current_interval-self.time),
-        title=format_time(self.time)+" until next blinds"
-      )
+
+      if self.current_interval-self.time<10:
+        nbmessage="Blinds are up! Now %d / %d"%(self.smallblinds[self.blindlevel],2*self.smallblinds[self.blindlevel])
+        notification.updateProgressBar(
+          current_value=(self.current_interval-self.time),
+          title=nbmessage
+        )
+      else:
+        notification.updateProgressBar(
+          current_value=(self.current_interval-self.time),
+          title=format_time(self.time)+" until next blinds"
+        )
     else:
       self.ids.timeuntilnextblinds.text="-- : --"
       self.ids.timeuntilnextblinds.bgwidth=0
@@ -271,17 +278,6 @@ class MainView(StackLayout):
         soundplayer=SoundLoader.load("sounds/%s"%soundfile)
         soundplayer.play()
       vibe(self.vibrate)
-
-      nbmessage="Blinds are now %d / %d"%(self.smallblinds[self.blindlevel],2*self.smallblinds[self.blindlevel])
-      if nbnotification is None:
-        nbnotification = Notification(
-          title="Blinds are up!",
-          message=nbmessage
-        )
-      else:
-        nbnotification.updateMessage(nbmessage)
-      nbnotification.send()
-      Clock.schedule_once(nbnotification.cancel,10)
 
   def start_blinds_timer(self):
     global notification
