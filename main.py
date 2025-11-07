@@ -363,6 +363,7 @@ class MainView(StackLayout):
     content=StackLayout(orientation="tb-lr")
     content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="players      3rd   2nd   1st"))
+    content.add_widget(InfoLabel(text="20+          20    30    the rest"))
     content.add_widget(InfoLabel(text="15+          15    25    the rest"))
     content.add_widget(InfoLabel(text="10+          10    15    the rest"))
     content.add_widget(InfoLabel(text="6+            5    10    the rest"))
