@@ -36,10 +36,11 @@ from kivy.core.audio import SoundLoader
 
 # game speeds
 gamespeeds={
- "slow":      [ 20,20,20,20,20,20,20,20,20,20,20,20,20,20,20 ],
- "standard":  [ 20,20,20,15,15,15,10,10,10,10,10,10,10,10,10 ],
- "fast":      [ 10,10,10,7.5,7.5,7.5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ],
- "very fast": [  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ]
+ "slow":      15*[20],
+ "standard":  3*[20] + 3*[15] + 6*[10],
+ "fast":      15*[10],
+ "very fast": 3*[10] + 3*[7.5] + 6*[5],
+ "ludicrous": 15*[5]
 }
 gamespeed="standard"
 
