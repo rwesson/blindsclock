@@ -10,7 +10,6 @@ from android_notify import Notification,NotificationStyles
 from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.lang import Builder
-from kivy.metrics import sp
 from kivy.properties import BooleanProperty,NumericProperty,StringProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.button import Button
