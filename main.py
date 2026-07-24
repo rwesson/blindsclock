@@ -391,17 +391,17 @@ class MainView(StackLayout):
     content.add_widget(Spacer())
     content.add_widget(InfoLabel(text="GAME SPEED"))
 
-    for speed in ["Slow","Standard","Fast","Very fast"]:
-      approxtime = round(2*sum([ x for x in gamespeeds[speed.lower()] ])/60)
+    for speed in gamespeeds.keys():
+      approxtime = round(2*sum([ x for x in gamespeeds[speed] ])/60)
       hourstring = "hr" if approxtime==2 else "hrs"
       timefmt = "%d" if approxtime%2==0 else "%3.1f"
 
-      intervals = sorted(list(set(gamespeeds[speed.lower()])),reverse=True)
+      intervals = sorted(list(set(gamespeeds[speed])),reverse=True)
       intervalstext = " / ".join([str(x) for x in intervals] )
       timestring = "%s ("+intervalstext+" mins, ~ "+timefmt+" "+hourstring+" total)"
-      labeltext = timestring%(speed,0.5*approxtime)
-      active=speed.lower()==self.gamespeed
-      content.add_widget(SelectorRow(selector=speed.lower(),group="gamespeed",text=labeltext,active=active))
+      labeltext = timestring%(speed.capitalize(),0.5*approxtime)
+      active=speed==self.gamespeed
+      content.add_widget(SelectorRow(selector=speed,group="gamespeed",text=labeltext,active=active))
 
     confirmgamespeed = SetButton()
     confirmgamespeed.bind(on_press = self.set_game_speed)
