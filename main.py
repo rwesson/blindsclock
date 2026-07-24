@@ -286,6 +286,8 @@ class MainView(StackLayout):
       self.ids.startstop.text="pause"
       self.ids.gametime.color="white"
       self.ids.timeuntilnextblinds.color="red" if self.time<60 else "white"
+      self.ids.currentblinds.color="white"
+      self.display_blinds()
 
 # start notification
       if notification is None:
@@ -307,6 +309,9 @@ class MainView(StackLayout):
       self.ids.startstop.text="resume"
       self.ids.gametime.color="grey"
       self.ids.timeuntilnextblinds.color="red" if self.time<60 else "grey"
+# prominent pause display
+      self.ids.currentblinds.text="PAUSED"
+      self.ids.currentblinds.color="red"
 
   def blinds_control(self,opt):
     if opt=="prev":
