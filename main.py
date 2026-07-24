@@ -94,7 +94,7 @@ class ConfirmReset(Popup):
 class BlindsStructure(Popup):
   def __init__(self,*args,**kwargs):
     super().__init__(**kwargs)
-    self.title="Blinds structure"
+    self.title="Blinds structure: %s game"%gamespeed
 
   def load_blinds_display(self,blinds,intervals,currentlevel):
     for i,b in enumerate(blinds):
