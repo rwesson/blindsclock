@@ -350,6 +350,7 @@ class MainView(StackLayout):
 # update display
       self.ids.startstop.text="start"
       self.ids.timeuntilnextblinds.text=format_time(self.time)
+      self.ids.currentblinds.color="white"
       self.display_blinds()
 # update notification if it has been created
       if notification is not None:
